@@ -3,7 +3,7 @@ project:
 
 website:
   page-navigation: true
-  repo-url: https://github.com/JoseBlanca/intro_programming_python
+  repo-url: https://github.com/JoseBlanca/programming_paradigms
   repo-actions: [source, issue]
   title: "Procedural, Object Oriented and functional programming"
   sidebar:
