@@ -1,0 +1,14 @@
+project:
+  type: website
+
+website:
+  page-navigation: true
+  repo-url: https://github.com/JoseBlanca/intro_programming_python
+  repo-actions: [source, issue]
+  title: "Procedural, Object Oriented and functional programming"
+  sidebar:
+    style: "docked"
+    search: true
+    contents:
+      - text: "Introduction"
+        href: index.qmd

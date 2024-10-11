@@ -1,0 +1,55 @@
+---
+title: "Introduction"
+format: live-html
+---
+
+## Introduction
+
+These notes are meant to reflect on how to organize the code, specially about how and when to structure the code in a [procedural](https://en.wikipedia.org/wiki/Procedural_programming), [object oriented](https://en.wikipedia.org/wiki/Object-oriented_programming) or [functional](https://en.wikipedia.org/wiki/Functional_programming) way.
+
+It is a common mistake, specially among beginers, that our aim when we write computer code is to create fast and memory efficient, very performant, programs.
+Of course we'd like our programs to run faster, but that's not our main goal, otherwise every program would be writen in assembly, a language capable of squeezing out every bit of computing power out of our machines. But, [few programmers](https://survey.stackoverflow.co/2024/technology/#most-popular-technologies) write in assembly.
+
+Performance is important, but programmers also have other aims like writting:
+
+- a working product before the universe ends, and, even better, before their managers and clients run out of patience.
+- realiable code that can be trusted.
+- maintable code in which bugs are easily located and fixed and new features can be easily added.
+- portable programs that can be used in different hardwares and scenarios.
+
+Readability and modularity are the two main ways to accomplish these goals.
+
+We have to divide our programming projects into small modules.
+Big problems are a daunting tasks, but we usually solve them by dividing them into many small, or even trivial, tasks.
+Since the first days of coding, programmers have been thinking about how to accomplish this division into parts, in different ways of how to structure the code, in different programming paradigms.
+
+Another advantage of creating small modules with clearly defined reponsabilities, like sorting a list of items or storing or loading data form disk, is that we can reuse them several times inside a project or even between projects. Programming, in practice, consists mainly in mixing previous ideas, in the form of modules, to create the code that solve our current problem. Computer programs are lego constructions.
+For programmers, it would be impossible to create even a relatively simple program from scratch, but modules allow them to create even complex software in little time.
+In fact, the only way to create a medium to large software project is to split its functionality in modules.
+
+The functionality of these small modules is also easier to define precisely and easier to check.
+Moreover, if we should trust more reused modules that have already been tested in previous projects, than brand new modules that are likely to include many unknown bugs.
+Thus programs created out of these modules will be more reliable.
+In fact, a fundamental good programming practice is to test the functionality of our code, and this is much easier, or even possible, to do if we divide our program into modules.
+
+Medium and large programs can be only created and maintained by teams, they are writen by lone programers.
+Thus, readability is a fundamental aspect. Code should be clear and easily understandable, readibility is paramount, and modularity is key in this regard.
+If the software is relevant we will have to fix bugs and add functionality in the future.
+Even if we are working alone we have to take into account that our future self, in six months, won't be able to understand the code unless is clear and modules facility this task.
+
+When one starts to code spends a lot of time thinking about how to implement the algorithms required to accomplish the task at hand, but as you gain experience in your programming carreer you focus your attention more and more in the structure of your code.
+Unstructured, spaghetti, code, could still be the option if you just need a 20 line script to solve a specific task, but for anything more complex than that you will realize that you need to think on the structure.
+
+
+So, we have to structure our code, there are different ways of creating this structure, like in a procedural, object oriented or functional way ,and the better that this structure and the language fits our ideas about the problem to solve, the easier will be to write and understand the program.
+Creating a good software structure is an art that is aquired with experience, especially with the experience of working with other good programmers, and it is a skill that is never completely mastered, if you are lucky you will become better at it throughout your professional carreer.
+However, thinking about different programing paradigms, like procedural, object oriented and functional, could be a way to work on this skill.
+This is the aim of these notes, to reflect on the advantages and limitations of these approaches.
+
+The approach of these notes is practical. One can think, for instance abouth functional programming, in a very theoretical way, but I have a practical problem. I write code in Python, a multiparadigm language. I can choose to use a procedural, object oriented or functional approach, and I can mix these ways of structuring the code in the same project. So, which is the best way to do it. We won't be able to answer this question, nobody does, but let's hope that these lines help us to think about it in a more productive way.
+
+If you have just started coding, I guess that all this ideas might sound very abstract, but, maybe, reading about these paradigms might, at least, convince you that you have to care about the structure of your code, and that, will time, you'll have to improve on this skill.
+
+## Licence
+
+This content is released under a [Creative Commons BY](https://creativecommons.org/licenses/by/4.0/) licence.
