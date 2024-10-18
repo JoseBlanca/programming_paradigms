@@ -1,0 +1,485 @@
+---
+title: "Procedural programming"
+format:
+  live-html:
+    mermaid:
+      theme: neutral
+---
+
+## It all started with the spaghetti
+
+At the begining, when computers were simple and programs were very small and performed just one task programmers didn't need to worry about dividing the code in sections that dealt with different tasks.
+However, very soon computers became more powerful, programs grew and code, if not structured became unwieldy, thus the [spaghetti code](https://en.wikipedia.org/wiki/Spaghetti_code) was born.
+In programming the way to solve a complex task is to divide it into small subtasks. This allows for:
+
+- The reuse of these small pieces of functionality.
+- The division of labor in teams of programmers in which different people can implement and maintain different parts of the code.
+- The testing of the functionality of every piece of code because we have a well defined idea of what that piece of code is supossed to do.
+
+If you are writting a small script that performs a just one very well defined and small task, it's OK not to structure your code. But for anything else, thinking about the structure is one of the most important tasks of the programer; and the main question to answer is: how do I divide this code into pieces that:
+
+- perform only one task
+- have access only to the data that they require to complete the task
+- have a well defined interface
+
+Of course, not all programmers were experienced and disciplined and lots of code became unstructured and entangle messes, they became spaghetti code that sometimes worked, but that were unmaintainable: bugs were difficult to fix, features impossible to add, and new programmers unfamiliar with the code were not capable of working with it.
+
+Fortunately programmers are resourceful, and very soon they realized that the key to maintainable code was to divide it in small pieces that performed a well defined task and that communicated with the rest of the program only through its declared interface.
+Different [programming](https://en.wikipedia.org/wiki/Programming_paradigm) paradigms have been proprosed to help structuring the code, like [Object Oriented Programming](https://en.wikipedia.org/wiki/Object-oriented_programming) (OOP) or [Functional Programming](https://en.wikipedia.org/wiki/Functional_programming), but the most basic one, a very used one, was [Procedural Programing](https://en.wikipedia.org/wiki/Procedural_programming).
+
+## Functions at the base
+
+[Functions](https://en.wikipedia.org/wiki/Function_(computer_programming)), that are also known as procedures, subroutines and many other, more or less, synonymous terms, are at the base of most ways of structuring your code, and they are the key concept in Procedural as well as in Object Oriented and in Functional Programming.
+
+### Functions are isolated blocks of code
+
+A function is a named section of a program, a block of code, a sequence of instruction grouped under a single name, that performs a specific task and that can be invoked, called, by other parts of the program.
+In Python functions are [defined](https://docs.python.org/3/tutorial/controlflow.html#defining-functions) by using the [def](https://docs.python.org/3/reference/compound_stmts.html#def) statement.
+
+```{pyodide}
+# Function definition
+def print_hello():
+    print("Hi!")
+
+# Function call
+print_hello()
+```
+
+A function is a somewhat isolated block of code, a box with some inputs and some outputs.
+
+```{pyodide}
+# Function definition
+def calc_circle_area(radius):
+    area = 3.14 * radius**2
+    return area
+
+# Function call
+circle_area = calc_circle_area(3)
+```
+
+```{mermaid}
+flowchart LR
+    subgraph call[function call]
+        call_["call_circle_area(3)"]
+        variable_passed["variable passed: 3"]
+        variable_returned["variable returned: circle_area"]
+    end
+
+    subgraph function[function calc_circle_area]
+        subgraph implementation_["internal implementation"]
+            implementation[area = 3.14 * radius**2]
+        end
+        subgraph interface["interface"]
+            input[input arguments: radius]
+            output[output: return area]
+        end
+    end
+    output ---> variable_returned
+    variable_passed ---> input
+```
+
+The function:
+
+- might take some data into the function
+- performs an action
+- might return some data out of the function
+
+It is useful to think about the function as actions on some data.
+Usually the data is a thing, like a cicle, that the function is an action performed on that thing, like calculting an area. So, functions are actions and the data is composed by nouns, take that into account when naming them.
+
+The function can be divided in:
+
+- an interface: the part of the function that interacts, interfaces, with the rest of the program
+- an implementation: the details about how the action is carried out
+
+Functions can be thought as as a lego piece that have a defined shape and that we could use in our projects every time that we need that particular shape.
+The interface of the function is its shape, everytime that we need to perform an action of a piece of data with that interface we can use that function, that block of code.
+And, when thinking about the program structure, it is useful to fix our attention of the interfaces of the different parts of the program, on the shapes of the different blocks, because that is how the whole program will fit together, through its interfaces. The implementation could be regarded almost as a detail.
+For instance, we could change the implementation the previous function without changeing its interface.
+
+```{pyodide}
+from math import pi
+
+def calc_circle_area(radius):
+    # we have changed the implementation
+    area = pi * radius**2
+    return area
+
+
+# The code that uses the function interface has not changed
+circle_area = calc_circle_area(3)
+```
+
+An interface is a kind of contract, we are committing ourselves to providing a functionality by providing a particular interface and as long as the caller continues using the same interface the function will continue honoring its functionality.
+This is one of the big advantages of the procedural programming, we can divide the program into smaller, and somewhat independent pieces of code, because we have limited the interaction between different parts of the program to their interfaces.
+We have turned a big piece of code into a collection of small interacting modules, a plate of spaghetti into a lego construction.
+This modularity is key and it helps with:
+
+- Understanding the code: it is easier to understand little pieces that have well defined responsabilities than a huge block of code. It is easier to understand how a lego construction works than a plate of spaghetti. New programers, or even programmers already familiar with the code will have a better time, a lower cognitive load, and will need less time understanding what the program is doing and how is doing it.
+- Bug fixing: it is much easier to locate which part of the code is responsible for a particular bug, like the calculus of the circle area if the functionality of the program is divided in small pieces. In case of an error in a program organized with procedures, a developer can locate and correct the error more quickly than in poorly organized code, leading to significant time and efficiency savings.
+- Testing: it is possible to check if a block of code is honoring its interface, because it now has an interface, a contract, to honor.
+- Extendability: new functionalities will be also easier to create. It is much easier to add new pieces to a lego construction than to a mess of spaghetti.
+
+### Using functions to structure our code
+
+Functions allow us to structure the code in parts, they enable breaking down a program into smaller, more manageable, modules, and, in that way, we can break complex problem into a series of simple tasks.
+Imagine that we have a program that calculates the area of a rectangle.
+
+```{pyodide}
+rectangle = {"width": 10, "height": 5}
+area = rectangle["width"] * rectangle["height"]
+print(f"The rectangle with dimensions {rectangle['width']}x{rectangle['height']} has an area of {area}")
+```
+
+This program accomplishes its task, but it we want to calculate the area for two rectangles we would have to repeat the same code twice.
+
+```{pyodide}
+rectangle1 = {"width": 10, "height": 5}
+area = rectangle1["width"] * rectangle1["height"]
+print(f"The rectangle with dimensions {rectangle['width']}x{rectangle['height']} has an area of {area}")
+
+rectangle = {"width": 20, "height": 3}
+area = rectangle1["width"] * rectangle1["height"]
+print(f"The rectangle with dimensions {rectangle['width']}x{rectangle['height']} has an area of {area}")
+```
+
+In programming a good rule of thumb is: [Don't Repeat Yourself](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself), this is the DRY principle.
+Imagine that now we want to change the way in which the result is printed, for instance because we want to write the result into a file; we would have to rewrite every instance of the print that we have in our program.
+
+```{pyodide}
+from io import StringIO
+fhand = StringIO()
+rectangle1 = {"width": 10, "height": 5}
+area = rectangle1["width"] * rectangle1["height"]
+fhand.write(f"The rectangle with dimensions {rectangle['width']}x{rectangle['height']} has an area of {area}\n")
+
+rectangle2 = {"width": 20, "height": 3}
+area = rectangle2["width"] * rectangle2["height"]
+fhand.write(f"The rectangle with dimensions {rectangle['width']}x{rectangle['height']} has an area of {area}\n")
+```
+
+However, if we would had written our program using a function we would had avoided repeating the code in the first place.
+We are [reusing the code](https://en.wikipedia.org/wiki/Code_reuse), and that is a nice principle to have in mind when we are programming.
+
+```{pyodide}
+def calc_and_print_rect_area(rectangle):
+    area = rectangle["width"] * rectangle["height"]
+    print(f"The rectangle with dimensions {rectangle['width']}x{rectangle['height']} has an area of {area}")
+
+rectangle1 = {"width": 10, "height": 5}
+calc_and_print_rect_area(rectangle1)
+rectangle2 = {"width": 20, "height": 3}
+calc_and_print_rect_area(rectangle2)
+```
+
+Code reuse, for instance, eases the implementation of new features. Imagine that now we want to write the result into a file instead of printing it in the console. With this new structure we would just need to change one function and the corresponding function calls and not like before, that we had to change every instance of the duplicated code.
+
+```{pyodide}
+from io import StringIO
+
+def calc_and_print_rect_area(rectangle, fhand):
+    area = rectangle["width"] * rectangle["height"]
+    fhand.write(f"The rectangle with dimensions {rectangle['width']}x{rectangle['height']} has an area of {area}\n")
+
+file = StringIO()
+rectangle1 = {"width": 10, "height": 5}
+calc_and_print_rect_area(rectangle1, file)
+rectangle2 = {"width": 20, "height": 3}
+calc_and_print_rect_area(rectangle2, file)
+```
+
+In this case we have changed the function and the function calls (because we have to include the file object) to that function.
+
+Even better, we could structure the program by splitting the tasks carried out by the current function, calculating the area and printing the result, into two functions, one that calculates the area and another one that prints the result.
+
+```{pyodide}
+def calc_rect_area(rectangle):
+    return rectangle["width"] * rectangle["height"]
+
+
+def print_rect(rectangle, area):
+    print(f"The rectangle with dimensions {rectangle['width']}x{rectangle['height']} has an area of {area}")
+
+
+rectangle = {"width": 10, "height": 5}
+area = calc_rect_area(rectangle)
+print_rect(rectangle, area)
+```
+
+This change might seem small, but it has several advantages:
+
+- The program parts are now smaller and easier to understand and to test
+- We can calculate areas without printing them and we could print them without calculating them
+- We can create different printing functions, like one for printing in a file and another one for printing in the console.
+- Different aspects of the program, like the math operations and the output could be taken care by different people or teams of programers. This is not important for this small program, but it might be critical for larger ones.
+
+## Scope
+
+Functions do not only structure the code in logical blocks, but they also limit the data that every one of those blocks can access.
+Functions have can use:
+
+- the variables that are defined inside them.
+- the arguments that we pass to them.
+
+We say that functions define a [scope](https://en.wikipedia.org/wiki/Scope_(computer_science)), an area of the program in which certain variables can be accessed.
+The code inside a function has its own variables, and those are not shared between functions and between the function and the rest of the code.
+To use a value inside a function, usually, we pass the variable to the function.
+To understand what do we mean when we say that we *pass* some data to a function we need to understand the concept of the scope.
+
+When we are programming we store and access data in memory.
+As we have seen, we refer to the data stored in memory by using variables.
+We could think that those variables, once they are created, are available in every part of our program.
+If you used that approach when you tried to build a program with more than a few lines of code, it would become very difficult to track which part of the program had changed a variable.
+So maintining those large programs would be very difficult.
+
+The scope defines where in the code a variable is available, and functions define their own scope.
+In a computer program not all data is available to every part of the code.
+For instance, the variables that are defined inside a function are not available outside of the function.
+
+```{pyodide}
+def print_numbers():
+    number1 = 42
+    number2 = 7
+    print(number1)
+    print(number2)
+
+print_numbers()
+# The next line will fail
+print(number1)
+print(number2)
+```
+
+We say that the variables defined in the function are in the function scope, that means that they are not available ouside of the function.
+
+```{pyodide}
+def say_hello():
+    name = "John"
+    print(1, name)
+
+say_hello()
+print(2, name)
+```
+
+We get a "'name' is not defined error" because the variable name was created inside the say_hello function, so in the say_hello scope, and is not available outside.
+A variable can only be used when is in the current scope.
+It is said that the function has a local scope in which its variables are available.
+
+Schema with the scope of a function call:
+
+```{pyodide}
+def calc_area(width, height):
+    area = width * height
+    return area
+
+result = calc_area(2, 3)
+```
+
+```{mermaid}
+flowchart LR
+    subgraph def["def calc_area(width, height):"]
+        subgraph func_scope["Function scope"]
+            subgraph return
+               ret["return area"]
+            end
+            subgraph in["function variables"]
+               var["area = width * height"]
+            end
+            subgraph arguments
+               width
+               height
+            end
+        end
+    end
+    subgraph result["result = calc_area(2, 3)"]
+        subgraph caller["Caller scope"]
+            subgraph result_[" "]
+               result__["result ="]
+            end
+            subgraph funccall["Function call"]
+               call1["calc_area(2, 3)"]
+            end
+        end
+    end
+    return ---> result__
+    call1 ---> arguments
+```
+
+
+### Global scope
+
+Be careful because Python also has a global scope, and if you create the variable outside the function it will be available inside. We can use the variables defined in the global scope inside any function.
+
+```{pyodide}
+
+GLOBAL_GREETING = "Hello!"
+
+def print_greeting():
+    print(GLOBAL_GREETING)
+
+print_greeting()
+print(GLOBAL_GREETING)
+```
+
+In this case the variable name has been created in the global scope, it is a global variable available everywhere.
+In general, avoid creating global variables, specially if they are not inmutable constants.
+As a general rule the use of the global scope is discouraged, try not to use it.
+If you think you need a global variable, think twice, in most cases is better not to use them.
+This is an advanced topic, but here's a tip for the future you, to keep states it might be much better to use objects, instances of a class, that global variables. For now, this is too advanced.
+Just remember, try very hard not to use global varibles, although you can allow some exceptions with some inmutable ones used for global configurations.
+It is common to use this kind of global variables, inmutables and related to configuration, and, by convention, in Python, people name them using all caps variable names.
+
+```{pyodide}
+I_AM_A_GLOBAL_VARIABLE = 'be_very_careful'
+
+def some_function():
+    print(I_AM_A_GLOBAL_VARIABLE)
+
+some_function()
+```
+
+Python discourages some uses of the use the global scope, and the behaviour of these variables is atypical.
+
+```{pyodide}
+GLOBAL_GREETING = "Hello!"
+
+def print_greeting():
+    GLOBAL_GREETING = "Hi!"
+    print(GLOBAL_GREETING)
+
+print(GLOBAL_GREETING)
+print_greeting()
+print(GLOBAL_GREETING)
+```
+
+```{pyodide}
+# This code will fail
+ACCUMULATED_SUM = 0
+
+def sum_one():
+    # This error could be fixed, but you better not
+    ACCUMULATED_SUM += 1
+    print(ACCUMULATED_SUM)
+
+sum_one()
+print(ACCUMULATED_SUM)
+```
+
+If you abuse of the global scope:
+
+- Proceed at your own risk.
+- Be aware, there might be dragons ahead.
+- You have been warned.
+
+### Passing data to a function, function arguments
+
+So, when the function requires some data to carry an action, we should pass that data explictly to the function.
+For instance, if we want a function to print a personalized greeting, it could need the name of the person.
+
+```{pyodide}
+def say_hello(name):
+    # The data that we have passed is now in the local scope of the function
+    print("Hello", name)
+
+# person is a variable defined in the global scope
+person = "Jane"
+say_hello(person) # <- we are passing the variable person to the function
+```
+
+Passing data to a function is easy, but a lot is going on under the hood:
+
+1. We have created a text string ("Jane"). That means that Python has created and stored a object of type str in memory.
+
+```{mermaid}
+flowchart TB
+    subgraph main [ ]
+    person:::invisible
+    end
+    subgraph say [ ]
+    name:::invisible
+    end
+    Memory:::memory
+    subgraph Memory
+    Jane["'Jane'"]
+    end
+    person --> Jane
+    name --> Jane
+    classDef variable fill:#f96
+    classDef invisible opacity:0%
+    classDef memory fill:#ccc
+    linkStyle 0,1 stroke-width:0px
+```
+
+2. We have assigned the variable person to that string, so now person refers to that str object stored in memory.
+
+```{mermaid}
+flowchart TB
+    subgraph main [global scope]
+    person
+    end
+    subgraph say [ ]
+    name:::invisible
+    end
+    Memory:::memory
+    subgraph Memory
+    Jane["'Jane'"]:::variable
+    end
+    person --> Jane
+    name --> Jane
+    classDef invisible opacity:0%
+    classDef memory fill:#ccc
+    linkStyle 1 stroke-width:0px
+```
+
+3. When we call the function we pass the reference of the object, the variable person, to the function.
+4. The function receives the reference to the str object and assigns to it a new reference, in this case called name. It is very important to understand that although the object is the same, the "Jane" string, we have created a new reference to it, the new variable name.
+```{mermaid}
+flowchart TB
+    subgraph main [global scope]
+    person
+    end
+    subgraph say [say_hello scope]
+    name
+    end
+    Memory:::memory
+    subgraph Memory
+    Jane["'Jane'"]
+    end
+    person --> Jane
+    name --> Jane
+    classDef invisible opacity:0%
+    classDef memory fill:#ccc
+```
+
+## return
+
+Scopes have also to be taken into account when getting a result out of the function.
+
+```{pyodide}
+def calc_rect_area(width, height):
+    area = width * height
+
+calc_rect_area(2, 3)
+# The next line will fail because area is not available in the global scope
+# The variable area belongs to the scope of the function.
+print("The area is:", area)
+```
+
+If we want to get data out of the function we use the [return](https://docs.python.org/3/reference/simple_stmts.html#the-return-statement) statement.
+Let's see how we can return data to the caller.
+
+```{pyodide}
+def calc_rect_area(width, height):
+    area = width * height
+    return area
+
+result = calc_rect_area(2, 3)
+print("The area is:", result)
+
+a, b = 4, 2
+print("The second area is: ", calc_rect_area(a, b))
+```
+
+We use the return statement to return a value generated in the function to the caller. Again, like in the arguments passed to the function, the caller will receive a new reference to the value stored in memory that can assign to a new variable.
+return is used to move a result in memory between scopes.
+For instance, in the previous example there is a variable, inside the function, named area, but in the first call we store the reference in a variable named result. area and result are two variables, two references to the same value stored in memory, but they are variables that belong to different scopes.
+In this case area belongs to the scope of the calc_rect_area function and result to the global scope.

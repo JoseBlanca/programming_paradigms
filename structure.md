@@ -1,37 +1,12 @@
-### data and action
-
-Algo que siempre vas a tener que tener en cuenta. Cuando estás programando es la división entre datos y acciones? Cómo vas a organizar la relación entre los datos y las acciones?
-
-### once you divide into pieces the interface is key
-
-Los programas más complejos suelen ser más que una tarea en 50 líneas de código. Eso implica que tienes algo que resolver que puedes dividir en subtareas y que además te interesa que esté clara esa clasificación esa división para poder reusar cada una de las subtareas y para que si trabajas en equipo distintos equipos distintos miembros del equipo puedan dedicarse a resolver cada una de las sub tareas e incluso para que puedas comprobar mediante test que cada una de las partes funciona adecuadamente
-
-The interface is the contract.
 
 
 ## procedural
 
-scope y sobre cómo las variables de dentro de la función no se pueden usar fuera y las variables globales no se pueden modificar dentro de la función
 
-Si se usa global. Proceed at your own risk. Dragons ahead. Let's hope that you really know what your doing. Think it twice, youre probably wrong
 
 Most simple than object oriented and functional, so if you are starting in programming, procedural might be easier.
 
-A procedure is a sequence of instructions grouped under a single name, which can be called to execute a specific task. Procedures enable breaking down a program into smaller, more manageable modules. They can be invoked in various parts of the program, including within other procedures, which facilitates code reuse and enhances readability and error correction.
-Code errors are more easily corrected: By isolating specific tasks in procedures, developers can test and debug each part of the program independently. In case of an error in a program organized with procedures, a developer can locate and correct the error more quickly than in poorly organized code, leading to significant time and efficiency savings.
 
-Implementation becames secondary, interface is more relevant because if you change the implementation of a procedure without changing its interface the rest of the program won't be required to be modified.
-
-The code is reusable: One of the primary benefits of procedural programming is the ability to reuse code in different parts of the program without needing to rewrite it
-DRY
-encourage reusability and enables code sharing
-
-The code is clearer: Breaking down a program into procedures makes the code clearer and easier to understand. Each procedure has a specific role, assisting developers in following their program more easily and effectively.
-
-scope. only part of the data is managed by different functions, this allows for easier debugging.
-Scoping keeps procedures modularized by preventing one from accessing non-local variables from other procedures without explicit clearance.
-
-Procedural code is simple and often the most appropriate given a simple use case. If it's organized well into modular functions with good code re-use
 
 ## interface
 
@@ -88,6 +63,10 @@ Crea funciones para trabajar con un texto inmutable: upper, lower, print. La est
 Use functions for encapsulation and bundle functionality and interfaces into modules to be exported and used as necessary when dealing with procedural level code blocks in your application.
 
 Las clases agrupan todos los métodos que tienen que ver con una estructura de datos en un mismo lugar
+
+### data and action
+
+Algo que siempre vas a tener que tener en cuenta. Cuando estás programando es la división entre datos y acciones? Cómo vas a organizar la relación entre los datos y las acciones?
 
 ## object oriented
 
