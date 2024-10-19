@@ -8,13 +8,6 @@ Most simple than object oriented and functional, so if you are starting in progr
 
 
 
-## interface
-
-- function name
-- arguments
-- return types
-- are arguments modified
-
 ## python es dinámico
 
 en python no se puede enforce lo que se devuelve, pero, en general, no es buena idea que la función pueda devolver distintas cosas dependiendo de los argumentos que se le pasen o del estado del programa.
@@ -186,3 +179,10 @@ reduce: Combines the elements of a collection using a binary function to produce
 la computación e incluso con la caché del procesador
 
 ## functools
+
+
+
+En el apartado de la programación funcional hay que hablar de functools, partial y cache
+En el apartado de la programación orientada a objetos hay que hablar de la diferencia entre ser de una clase o de un tipo y comportarse. Siguiendo una interfaz son dos aproximaciones muy distintas a la programación. Una por ejemplo es la de Java y la otra la de rust
+En Python se pueden mezclar todos los paradigmas, incluso por ejemplo, puedes crear una clase que seacallable
+En la sección de orientador objetos hablar de dataclasses y named tuples como clase más livianas?

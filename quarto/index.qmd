@@ -6,6 +6,8 @@ format: live-html
 ## Introduction
 
 These notes are meant to reflect on how to organize the code, specially about how and when to structure the code in a [procedural](https://en.wikipedia.org/wiki/Procedural_programming), [object oriented](https://en.wikipedia.org/wiki/Object-oriented_programming) or [functional](https://en.wikipedia.org/wiki/Functional_programming) way.
+This is not a course on how to structure your code, but just an introduction and a refletion about the ideas to have in mind when doing so.
+I think that structuring the code is an art, a craft, that can only be adquired through practice, but let's hope that thinking about the motivations and tools involved in it one can develop this craft faster, and moreover, that one learns about the high importance of writting nicely structured code instead of an inmaintainalbe jumbled mess.
 
 It is a common mistake, specially among beginers, that our aim when we write computer code is to create fast and memory efficient, very performant, programs.
 Of course we'd like our programs to run faster, but that's not our main goal, otherwise every program would be writen in assembly, a language capable of squeezing out every bit of computing power out of our machines. But, [few programmers](https://survey.stackoverflow.co/2024/technology/#most-popular-technologies) write in assembly.

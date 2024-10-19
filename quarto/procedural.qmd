@@ -9,8 +9,8 @@ format:
 ## It all started with the spaghetti
 
 At the begining, when computers were simple and programs were very small and performed just one task programmers didn't need to worry about dividing the code in sections that dealt with different tasks.
-However, very soon computers became more powerful, programs grew and code, if not structured became unwieldy, thus the [spaghetti code](https://en.wikipedia.org/wiki/Spaghetti_code) was born.
-In programming the way to solve a complex task is to divide it into small subtasks. This allows for:
+However, very soon computers became more powerful, programs grew and code became unwieldy thus the [spaghetti code](https://en.wikipedia.org/wiki/Spaghetti_code) was born.
+Programmers thought about how to solve the issue and they came with the idea that they had to divide the code into small subtasks. This allows for:
 
 - The reuse of these small pieces of functionality.
 - The division of labor in teams of programmers in which different people can implement and maintain different parts of the code.
@@ -27,9 +27,11 @@ Of course, not all programmers were experienced and disciplined and lots of code
 Fortunately programmers are resourceful, and very soon they realized that the key to maintainable code was to divide it in small pieces that performed a well defined task and that communicated with the rest of the program only through its declared interface.
 Different [programming](https://en.wikipedia.org/wiki/Programming_paradigm) paradigms have been proprosed to help structuring the code, like [Object Oriented Programming](https://en.wikipedia.org/wiki/Object-oriented_programming) (OOP) or [Functional Programming](https://en.wikipedia.org/wiki/Functional_programming), but the most basic one, a very used one, was [Procedural Programing](https://en.wikipedia.org/wiki/Procedural_programming).
 
-## Functions at the base
+## Functions to disentangle the spaghetti
 
-[Functions](https://en.wikipedia.org/wiki/Function_(computer_programming)), that are also known as procedures, subroutines and many other, more or less, synonymous terms, are at the base of most ways of structuring your code, and they are the key concept in Procedural as well as in Object Oriented and in Functional Programming.
+They thought about how to create these subtasks, these small pieces of functionallity and they created the idea of the [function](https://en.wikipedia.org/wiki/Function_(computer_programming)).
+By the way, functions are also known as procedures, subroutines and many other, more or less, synonymous terms, but we are just going to use the term function.
+They are the key tool used to structure the code, they are the fundamental building block in all the main programming paradimgs: Procedural, Object Oriented and Functional Programming.
 
 ### Functions are isolated blocks of code
 
@@ -46,6 +48,7 @@ print_hello()
 ```
 
 A function is a somewhat isolated block of code, a box with some inputs and some outputs.
+They are somewhat similar to a mathematical function, they take some inputs, that could be some numbers of any other kind of data, they do some calculations, some transformations, and they might return a result.
 
 ```{pyodide}
 # Function definition
@@ -483,3 +486,397 @@ We use the return statement to return a value generated in the function to the c
 return is used to move a result in memory between scopes.
 For instance, in the previous example there is a variable, inside the function, named area, but in the first call we store the reference in a variable named result. area and result are two variables, two references to the same value stored in memory, but they are variables that belong to different scopes.
 In this case area belongs to the scope of the calc_rect_area function and result to the global scope.
+
+## The function interface
+
+Now that we have talked about how to define functions, and how to pass and get data from them we can deliniate what the function interface is.
+Remember, when thinking about a function, or any other form of modularizing the code, of dividing it in pieces, take into accounts two aspects:
+
+- the interface: how the function interacts with the rest of the program
+- the implementation: how the task is carried out
+
+For the structure of the program interfaces are more important than implementations, because if you change an implementation, for instance to speed it up or to fix a bug, the rest of the program will be unafected as long as you keep the interface.
+Think of the interface as a promise done to the rest of the program, as a contract that the function will honor. Thus, for the rest of the program, the implementation is just a detail, what matters is how to interact with that piece of the code.
+The program is a complex machine build with small, and hopefully understandable, lego pieces, and the interface is the shape of the piece.
+
+So, what comprises the interface:
+
+- the function name, and possible the namespace in which that name is found.
+- the arguments accepted by the function as well as its types
+- the returned values and its types
+- any modification to the value and the state
+
+### Name and namespace
+
+Of course, the function name is a critical part of the function interface, if we change it the rest of the code that uses that function will have to be changed.
+But also the namespace, where the function is located is important.
+For instance, in Python the [sqrt](https://docs.python.org/3/library/math.html#math.sqrt) function is located in the [math](https://docs.python.org/3/library/math.html) module of the standard library, so to use it we have to import it from there.
+
+```{pyodide}
+from math import sqrt
+
+print(sqrt(2))
+```
+
+If the Python developers were to change the location of the sqrt function, we would have to change our code accordingly. By the way, in the Python standard library there is a different [sqrt](https://docs.python.org/3/library/cmath.html#cmath.sqrt) function with a different interface, a function that return [complex](https://docs.python.org/3/library/functions.html#complex) numbers instead of [floats](https://docs.python.org/3/library/functions.html#float), and we differenciate between these two functions because they are imported from different namespaces, from different modules.
+
+### Arguments
+
+The arguments accepted by the function, as well as its types, are also part of the interface, if we were to change the arguments required or accepted we might change the rest of the code, the parts of the program that make calls to the modified function.
+
+### State change
+
+A more suttle part of the interface, one that is usually not explicit, is a change in the state of an object.
+For instance, imagine that you are reading from a file and that you pass the file object to a function, that function could change the state of the object, for instance by consuming from the file or by closing it.
+
+```{pyodide}
+from io import StringIO
+
+text = """Far out in the uncharted backwaters of the unfashionable end of the western spiral arm of the Galaxy
+lies a small unregarded yellow sun. Orbiting this at a distance of roughly ninety-two million miles is
+an utterly insignificant little blue green planet whose ape-descended life forms are so amazingly primitive
+that they still think digital watches are a pretty neat idea.
+"""
+
+# no function call
+file = StringIO(text)
+print(len(list(file)))
+
+def consume_one_line(file):
+    next(file)
+
+# with a function call that changes the state of the file object
+# by consuming one line
+file = StringIO(text)
+consume_one_line(file)
+print(len(list(file)))
+
+def bad_actor_closes_file(file):
+    file.close()
+
+# with a function call that changes the state of the file object
+# by closing it
+file = StringIO(text)
+bad_actor_closes_file(file)
+print(len(list(file)))
+```
+
+After calling to the different functions the behaviour of the program will be quite different, so the change in the state of the file object is part of the function interface.
+It is always a good policy to informe to the caller/user of the function about these changes of state by making them explicit.
+
+### Value change
+
+We can pass data to a function if two different ways:
+
+- by copying it
+- using a reference or a pointer
+
+In the first case we copy the value. Imagine that we were passing a variable that holds the integer 2. We would pass that data to the function by creating a copy of that number in a different part of the memory and, thus, the variable inside the function would reference to a different 2 than the variable outside the function.
+
+In the second case both variables, the one inside the function and the ones outside, would end up referencing the same value, the same 2.
+In some languages, like C or Rust one can chose how to proceed, do we want to copy the data or to create a reference or a pointer to it and that is made explicit in the function interface.
+
+One of the Python objectives was to be simple, and that is why, maybe, his creator chose to avoid this complexty and to make all arguments passings to any function by reference. Moreover, in Python all variables are always references.
+For inmutable types this is not a problem at all because even if different variables hold references to the same object, none of them could change the value, but with mutable data types we have a problem. For instance, a function could change a list, that has been passed to it by a caller, by appending values to it without the caller awarenes.
+So, in Python mutable objects could be altered inside any function and that is part of the interface, but a part that could not be explicit.
+
+Try to guess what will be the result of running the following code:
+
+```{pyodide}
+a = "hello"
+b = a
+b = a.upper()
+print(a)
+print(b)
+```
+
+Give x a value in order the get the result to be 10.
+Should x be 4 or 6?
+
+```{pyodide}
+#| exercise: get_ten
+
+a = 6
+x = 
+c = a
+c = 5
+result = a + b
+print(result)
+print(result == 10)
+```
+
+::: { .solution exercise="get_ten" }
+::: { .callout-tip collapse="false"}
+
+```{pyodide}
+a = 6
+x = 4
+c = a
+c = 5
+result = a + x
+print(result)
+print(result == 10)
+```
+
+:::
+:::
+
+
+With lists the behaviour seems different.
+
+```{pyodide}
+
+a = ["hello", "Dirk"]
+b = a
+b[0] = b[0].upper()
+print(a)
+print(b)
+```
+
+Why do we get these different results?
+
+Let's think about what is going on.
+
+```{python}
+a = "hello"
+```
+
+```{mermaid}
+flowchart TB
+    subgraph variables
+    a
+    b:::invisible
+    end
+    Memory:::memory
+    subgraph Memory
+    hello1["'hello'"]
+    hello2["'HELLO'"]:::invisible
+    end
+    a --> hello1
+    classDef invisible opacity:0%
+    classDef memory fill:#ccc
+```
+```{python}
+# a.upper() creates a new string, it does not modify
+# the original string that remains intact in memory
+# and now b refers to the new string "HELLO"
+b = a.upper()
+```
+
+```{mermaid}
+flowchart TB
+    subgraph variables
+    a
+    b
+    end
+    Memory:::memory
+    subgraph Memory
+    hello1["'hello'"]
+    hello2["'HELLO'"]:::invisible
+    end
+    a --> hello1
+    b --> hello1
+    classDef invisible opacity:0%
+    classDef memory fill:#ccc
+```
+
+```{python}
+b = a
+```
+
+```{mermaid}
+flowchart TB
+    subgraph variables
+    a
+    b
+    end
+    Memory:::memory
+    subgraph Memory
+    hello1["'hello'"]
+    hello2["'HELLO'"]
+    end
+    a --> hello1
+    b --> hello2
+    classDef invisible opacity:0%
+    classDef memory fill:#ccc
+```
+
+With mutable objects, like lists, the result will be different.
+
+```{python}
+a = ["hello", "Jane"]
+```
+
+```{mermaid}
+flowchart TB
+    subgraph variables
+    a
+    b:::invisible
+    end
+    Memory:::memory
+    subgraph Memory
+    hello1["['hello', 'Jane']"]
+    end
+    a --> hello1
+    classDef invisible opacity:0%
+    classDef memory fill:#ccc
+```
+
+```{python}
+b = a
+```
+
+```{mermaid}
+flowchart TB
+    subgraph variables
+    a
+    b
+    end
+    Memory:::memory
+    subgraph Memory
+    hello1["['hello', 'Jane']"]
+    end
+    a --> hello1
+    b --> hello1
+    classDef invisible opacity:0%
+    classDef memory fill:#ccc
+```
+
+```{python}
+# We are modifying the original list
+b[0] = b[0].upper()
+
+# b[0] refers to the string "hello"
+# b[0].upper() creates a new string in memory "HELLO"
+# so b[0] = b[0].upper() is equivalent to
+b[0] = "HELLO"
+# We are asking to the list refered by b, the same list that a refers to,
+# to change its first member from "hello" to "HELLO"
+# So we get a modified list ["HELLO"] and both a and b refer still to this list
+# that is in fact the same original list, that is has changed its first member
+```
+
+```{mermaid}
+flowchart TB
+    subgraph variables
+    a
+    b
+    end
+    Memory:::memory
+    subgraph Memory
+    hello1["['HELLO', 'Jane']"]
+    end
+    a --> hello1
+    b --> hello1
+    classDef invisible opacity:0%
+    classDef memory fill:#ccc
+```
+
+This is an aspect that varies from language to language.
+If you study a different programming language you will need to understand if the variables are ment to be values, [pointers](https://en.wikipedia.org/wiki/Pointer_(computer_programming)) or references.
+In Python they are always references. You can read a Real Python tutorial about Python [references](https://realpython.com/python-pass-by-reference/).
+
+In Python every variable is a reference, and arguments to functions are thus passed by reference.
+When we pass a text string or a list to a function Python creates new references to these objects.
+We have to be careful because if you pass a mutable object to a function the function might changed it.
+
+```{pyodide}
+def sum_squares(numbers):
+    for i in range(len(numbers)):
+        numbers[i] = numbers[i]**2
+    return sum(numbers)
+
+my_numbers = [1, 2, 3]
+print(my_numbers)
+square_sum = sum_squares(my_numbers)
+print(f"{square_sum=}")
+# my_numbers have been changed, not cool
+print(my_numbers)
+```
+
+Changing inside the function a mutable object that have been passed to it without warning the function user is a common source of bugs and problems. This is not a good practice, try to avoid it!
+The previous code could be written to avoid this problem.
+
+```{pyodide}
+def sum_squares(numbers):
+    # first we copy the list to avoid changing the original numbers
+    numbers = numbers[:]
+    for i in range(len(numbers)):
+        numbers[i] = numbers[i]**2
+    return sum(numbers)
+
+my_numbers = [1, 2, 3]
+print(my_numbers)
+square_sum = sum_squares(my_numbers)
+print(f"{square_sum=}")
+# now my_numbers have not been changed, not cool
+print(my_numbers)
+```
+
+One way to make the change of the object inside the function, more or less, explicit is not to return the object.
+That is why lists methods like append, extend or sort do not return the list. The callers are made aware that they are not getting a new list and the original one is intact, no, the list that they sent to the function is changed.
+Well, in this case, these are not, strictly speaking, functions, but object methods, but they still could return a reference to the object. Their interface could be more similiar to the upper, lower or strip methods of the str class that do return a new str (in this case because the str objects are inmutable, so unlike the lists they can not be modified and so upper cannot modify the original object, but can only create a new one that has to be returned).
+
+### Returned values
+
+It is also fairly obvious that the returned values and types are also part of the interface, if we change what we return we will have to alter the calls to the function.
+
+By the way, I think that it is not a very good practice to change the number or type of the values returned depending on the function call.
+Imagine that we did a function that returned either a float or a complex number depending on the input.
+
+```{pyodide}
+from math import sqrt as fsqrt
+from cmath import sqrt as csqrt
+
+def sqrt(number:float) -> float|complex:
+    try:
+        result = fsqrt(number)
+    except ValueError:
+        result = csqrt(number)
+    return result
+
+result = sqrt(2)
+if isinstance(result, float):
+    print("Here we need code to deal with floats")
+else:
+    print("Here we need code to deal with complex")
+```
+
+This is a well defined interface, but the caller will have to test what is getting from the function.
+
+A better solution would be to make the caller/user of the function to deal with the two options, as the standard library sqrts functions do.
+
+```{pyodide}
+from math import sqrt as fsqrt
+from cmath import sqrt as csqrt
+
+value = 10
+try:
+    result = fsqrt(value)
+except ValueError
+    result = csqrt(value)
+```
+
+Now the caller explicitly aware of the two possible types and will need to decide to deal the situation. Before the problem was not explicit and the unaware caller could have a program that worked in some ocasions and failed in some other times without being aware of the problem.
+
+We have the same problem when we choose to return None when the function fails to calculate the result.
+
+```{pyodide}
+from math import sqrt as sqrt
+
+def sqrt(number:float) -> float|None:
+    try:
+        result = sqrt(number)
+    except ValueError:
+        result = None
+    return result
+
+res = sqrt(1)
+if res is None:
+    print("Function failed to calculate")
+else:
+    print(f"We can go on with our calculations, there's a result value: {res}")
+```
+
+In this case it'd be better to just let the error be raised, like the standard library sqrt function does.
+In that way the caller we'll be aware that a problem happened only when the problem arises, and will have to deal the the error only when needs to, and not in every call in the [call stack](https://en.wikipedia.org/wiki/Call_stack).
