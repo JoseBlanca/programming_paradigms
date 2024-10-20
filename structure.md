@@ -1,5 +1,14 @@
 
 
+a variable belongs the a scope, not the value stored in memory.
+
+explicit interface:
+- function name
+- arguments
+- return
+
+implicit interface. Bad for modularity it will create more spaghetti-like code.
+
 ## procedural
 
 
@@ -186,3 +195,9 @@ En el apartado de la programación funcional hay que hablar de functools, partia
 En el apartado de la programación orientada a objetos hay que hablar de la diferencia entre ser de una clase o de un tipo y comportarse. Siguiendo una interfaz son dos aproximaciones muy distintas a la programación. Una por ejemplo es la de Java y la otra la de rust
 En Python se pueden mezclar todos los paradigmas, incluso por ejemplo, puedes crear una clase que seacallable
 En la sección de orientador objetos hablar de dataclasses y named tuples como clase más livianas?
+
+
+## python es multiparadigma
+
+métodos mágicos para ocultar algo de su carácter OOP.
+

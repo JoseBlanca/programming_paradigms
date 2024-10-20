@@ -524,46 +524,6 @@ If the Python developers were to change the location of the sqrt function, we wo
 
 The arguments accepted by the function, as well as its types, are also part of the interface, if we were to change the arguments required or accepted we might change the rest of the code, the parts of the program that make calls to the modified function.
 
-### State change
-
-A more suttle part of the interface, one that is usually not explicit, is a change in the state of an object.
-For instance, imagine that you are reading from a file and that you pass the file object to a function, that function could change the state of the object, for instance by consuming from the file or by closing it.
-
-```{pyodide}
-from io import StringIO
-
-text = """Far out in the uncharted backwaters of the unfashionable end of the western spiral arm of the Galaxy
-lies a small unregarded yellow sun. Orbiting this at a distance of roughly ninety-two million miles is
-an utterly insignificant little blue green planet whose ape-descended life forms are so amazingly primitive
-that they still think digital watches are a pretty neat idea.
-"""
-
-# no function call
-file = StringIO(text)
-print(len(list(file)))
-
-def consume_one_line(file):
-    next(file)
-
-# with a function call that changes the state of the file object
-# by consuming one line
-file = StringIO(text)
-consume_one_line(file)
-print(len(list(file)))
-
-def bad_actor_closes_file(file):
-    file.close()
-
-# with a function call that changes the state of the file object
-# by closing it
-file = StringIO(text)
-bad_actor_closes_file(file)
-print(len(list(file)))
-```
-
-After calling to the different functions the behaviour of the program will be quite different, so the change in the state of the file object is part of the function interface.
-It is always a good policy to informe to the caller/user of the function about these changes of state by making them explicit.
-
 ### Value change
 
 We can pass data to a function if two different ways:
@@ -816,6 +776,122 @@ print(my_numbers)
 One way to make the change of the object inside the function, more or less, explicit is not to return the object.
 That is why lists methods like append, extend or sort do not return the list. The callers are made aware that they are not getting a new list and the original one is intact, no, the list that they sent to the function is changed.
 Well, in this case, these are not, strictly speaking, functions, but object methods, but they still could return a reference to the object. Their interface could be more similiar to the upper, lower or strip methods of the str class that do return a new str (in this case because the str objects are inmutable, so unlike the lists they can not be modified and so upper cannot modify the original object, but can only create a new one that has to be returned).
+
+### Side effects
+
+A more suttle part of the interface, one that is usually not explicit, is a change in the state of an object.
+This is known as a [side effect](https://en.wikipedia.org/wiki/Side_effect_(computer_science)), an effect other than reading the value of the function arguments and returning the intended result. 
+
+For instance, imagine that you are reading from a file and that you pass the file object to a function, that function could change the state of the object, for instance by consuming from the file or by closing it.
+
+```{pyodide}
+from io import StringIO
+
+text = """Far out in the uncharted backwaters of the unfashionable end of the western spiral arm of the Galaxy
+lies a small unregarded yellow sun. Orbiting this at a distance of roughly ninety-two million miles is
+an utterly insignificant little blue green planet whose ape-descended life forms are so amazingly primitive
+that they still think digital watches are a pretty neat idea.
+"""
+
+# no function call
+file = StringIO(text)
+print(len(list(file)))
+
+def consume_one_line(file):
+    next(file)
+
+# with a function call that changes the state of the file object
+# by consuming one line
+file = StringIO(text)
+consume_one_line(file)
+print(len(list(file)))
+
+def bad_actor_closes_file(file):
+    file.close()
+
+# with a function call that changes the state of the file object
+# by closing it
+file = StringIO(text)
+bad_actor_closes_file(file)
+print(len(list(file)))
+```
+
+After calling to the different functions the behaviour of the program will be quite different, so the change in the state of the file object is part of the function interface.
+It is always a good policy to informe to the caller/user of the function about these changes of state by making them explicit.
+
+Another kind of side effect to affect the global scope.
+This is highly discuraged, there is a global scope and many times it is reasonable to use it to read, for instance, inmutable configuration variables. But altering a variable in the global state takes us back to the path of unmaintanable spaghetti code.
+
+In Python the global scope is frequently used to store configuration constants. (By the way, if you follow the [PEP8](https://peps.python.org/pep-0008/) style guide, as you should, contants defined in the global scope are written with all capital letters.)
+
+```{pyodide}
+NUM_THREADS = 1
+
+def some_function_using_threads():
+    print(f"The number of threads is {NUM_THREADS}")
+```
+
+However, altering variables that belong to the global scope is discuraged and trying to do so can end up in unexpected behaviours.
+
+```{pyodide}
+NUM_THREADS = 1
+
+def some_function_using_threads():
+    NUM_THREADS = 2  # Python will create a new local scope variable,
+                     # this is not the variable as the global one
+    print(f"The number of threads is {NUM_THREADS}")
+
+some_function_using_threads()
+print(f"The global number of threads is still {NUM_THREADS}")
+```
+
+If you try to change a global inmutable variable you might get an error.
+
+```{pyodide}
+NUM_THREADS = 1
+
+def some_function_using_threads():
+    NUM_THREADS += 1  # This will fail
+                      # You are trying to set a new local variable named
+                      # NUM_THREADS, but this variable has not been initialized
+    print(f"The number of threads is {NUM_THREADS}")
+
+some_function_using_threads()
+```
+
+Python allows you to modify a global variable, but you have to explicitely ask for it by using the [global](https://docs.python.org/3/reference/simple_stmts.html#global) statement.
+
+```{pyodide}
+NUM_THREADS = 1
+
+def some_function_using_threads():
+    global NUM_THREADS
+    NUM_THREADS += 1
+    print(f"The number of threads is {NUM_THREADS}")
+
+some_function_using_threads()
+print(f"We have changed the global number of threads, now they are: {NUM_THREADS}")
+```
+
+However, in general, try not to abuse of the global scope. Functions were desing to modify only its scope and having side effects goes agaist the modularity achived by having functions in the first place.
+Altering global variables makes the progam less modular because although the change of these variable could be considered part of the interface of the function, it is not an explicit part, it is not declared as an argument or as a return. So, by modifying global variables we get code that is more spaghetti like, and that so the program will be less maintainable.
+
+The global statement is a nice remainder of the problem of altering the global state, but in Python we can alter the global state, the variables that belong to the global scope, without using the global statement.
+We can modify mutable objects referenced by variables that belong to the global scope.
+
+```{pyodide}
+CONFIG = {'num_threads': 1}
+
+def some_function_using_threads():
+    CONFIG['num_threads'] += 1
+    print(f"The number of threads is {CONFIG['num_threads']}")
+
+some_function_using_threads()
+print(f"We have changed the global number of threads, now they are: {CONFIG['num_threads']}")
+```
+
+If you think that you need to alter the global state, think twice, because, in general this is a very bad idea. If after thinking it carefully you still think you need to do it, think it again.
+There is another mechanism to store states between funcion calls that respects the modularity: create a class and instantiate an object. Objects are modular and they allow us to store states between calls. That is one of the big difference between the procedural and the object oriented approach.
 
 ### Returned values
 
