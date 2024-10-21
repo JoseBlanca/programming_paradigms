@@ -307,6 +307,16 @@ flowchart LR
     call1 ---> arguments
 ```
 
+A variable points to some data stored in memory. Strictly speaking the variable belongs to a scope, the data pointed by the variable does not.
+For instance, if we store an object in memory, like the value 2, that object does not belong to a scope, the variables that might point to it do.
+
+```{pyodide}
+
+def some_function(a_function_variable):
+    print("This is exactly the same object {a_function_variable}, but refered to by a local variable")
+
+a_global_variable = 2
+```
 
 ### Global scope
 
@@ -487,6 +497,13 @@ return is used to move a result in memory between scopes.
 For instance, in the previous example there is a variable, inside the function, named area, but in the first call we store the reference in a variable named result. area and result are two variables, two references to the same value stored in memory, but they are variables that belong to different scopes.
 In this case area belongs to the scope of the calc_rect_area function and result to the global scope.
 
+## Argument and return types
+
+Python is a dynamic language, it does not require to defined the types of the arguments and return values, and, by default, does not enforce those types even when they are defined.
+The type annotations are meant as a way of documenting the code.
+
+There are [typing tools](https://typing.readthedocs.io/), like [mypy](https://mypy-lang.org/) that can be used to enforce them, but they are not part of the language proper.
+
 ## The function interface
 
 Now that we have talked about how to define functions, and how to pass and get data from them we can deliniate what the function interface is.
@@ -499,12 +516,22 @@ For the structure of the program interfaces are more important than implementati
 Think of the interface as a promise done to the rest of the program, as a contract that the function will honor. Thus, for the rest of the program, the implementation is just a detail, what matters is how to interact with that piece of the code.
 The program is a complex machine build with small, and hopefully understandable, lego pieces, and the interface is the shape of the piece.
 
-So, what comprises the interface:
+We could split the interface in two: the explicit or interface proper, and the implicit interface.
+
+The interface proper is comprised by:
 
 - the function name, and possible the namespace in which that name is found.
 - the arguments accepted by the function as well as its types
 - the returned values and its types
-- any modification to the value and the state
+
+The implicit interface is comprised by the interactions of the function with the rest of the program that are not explicitly declared like:
+
+- any modification state of the objects passed to the function that are not clearly stated and, thus, not expected by the user.
+- any modification to the mutable objects passed to the function not clearly estated
+- any modification of the global state, like changing the value of a global variable
+- any use of the global scope, like the reading of a global variable
+
+The interface proper is the stated contract that the function explicitely declares to follow and its at the base of the software modularity. While the implicit interface is, although it can be useful, and even completely necesary in some circunstances, is a modularity violation and a throw back to the spaghetti code, to an unmaintainable mess.
 
 ### Name and namespace
 
@@ -956,3 +983,20 @@ else:
 
 In this case it'd be better to just let the error be raised, like the standard library sqrt function does.
 In that way the caller we'll be aware that a problem happened only when the problem arises, and will have to deal the the error only when needs to, and not in every call in the [call stack](https://en.wikipedia.org/wiki/Call_stack).
+
+## Testing and modularity
+
+Having isolated pieces of functionality and an interface defined for each piece makes possible that we test the complience of each piece to its interface. Is this piece honoring its interface/contract.
+In spaghetti code we could test if the overall complex functionality of the program is working, but if we have a modular code base testing becames much more useful because we can test that each piece works, and the task carried out by every small unit is simpler and thus finding and fixing bugs is easier. Moreover, if we decide to change the implementation of, for instance, one function, but the test is still working we can be confident, although not completely sure, that the rest of the program will sill work.
+
+Let's show how a test would work.
+
+```{pyodide}
+from math import isclose
+def calc_rect_area(width, height):
+    return width * height
+
+assert isclose(calc_react_area(2, 2), 4.0)
+```
+
+Testing is a huge topic in of itself and we won't cover it here, but read something about [unit testing](https://en.wikipedia.org/wiki/Unit_testing). Be aware that in Python there is a module called [unittest](https://docs.python.org/3/library/unittest.html) in the standar library that helps with creating tests (more about the [unittest](https://realpython.com/python-unittest/) module in Real Python), but that there is another testing library: [pytest](https://docs.pytest.org/). pytest is not included in the standard library, but is more modern and much more capable that unittest, and it is also very popular. You can read about [pytest in Real Python](https://realpython.com/pytest-python-testing/) or in the [pytest book](https://pythontest.com/pytest-book/).

@@ -1,57 +1,4 @@
 
-
-a variable belongs the a scope, not the value stored in memory.
-
-explicit interface:
-- function name
-- arguments
-- return
-
-implicit interface. Bad for modularity it will create more spaghetti-like code.
-
-## procedural
-
-
-
-Most simple than object oriented and functional, so if you are starting in programming, procedural might be easier.
-
-
-
-## python es dinámico
-
-en python no se puede enforce lo que se devuelve, pero, en general, no es buena idea que la función pueda devolver distintas cosas dependiendo de los argumentos que se le pasen o del estado del programa.
-
-aunque la interfaz de la función puede indicarse con type hints (que, al menos por el momento no son enforced)
-
-## by reference, by value, mutable and inmutable
-
-Un problema gordo en programación es que hay una parte de la interfaz de las funciones que no es explícita, el hecho de si modifica o no los objetos/valores que le pasas. Si los argumentos se pasan por valor no hay problema porque se copian tienes la garantía de que tus valores/objetos originales no se van a modificar, pero si los pasas por referencia y son objetos mutables no tienes esa garantía y eso en python no es explícito
-
-Lo malo es no poder indicar en la interfaz que estás modificando los argumentos. Una forma de indicarlo es que la función no devuelva nada, así el que llama sabe que lo que hace la función no es devolver algo nuevo. Eso pasa, por ejemplo, con el método Sort en Python. Mientras que la función sorted sí copia, no modifica, y devuelve
-Nunca escribas una función que pueda devolver dos cosas distintas dependiendo de los parámetros que le pases
-Esto es ampliable a nunca escribas una función que no quede muy claro si modifica o no modifica los parámetros que le has pasado
-En principio si vas a modificar algo molaría que lo indicases en la interfaz y la forma de hacerlo. Un Python es no devolviendo nada en la función
-
-
-si pasas por valor te aseguras de que los argumentos no serán cambiados, pero en python no se puede pasar por valor, sólo por referencia.
-
-El problema de pasar por valor es el coste en memoria y tiempo de la copia.
-
-no hay problema si los objetos son inmutables porque aunque los pases por referencia la función nunca podrá cambiarlos.
-El problema es cuando se pasa por referencia un objeto mutable.
-
-It would be ideal to never alter a value passed to a function. Pass by value enforces that, but in Python that is not possible and you rely in the writer of the function to do it.
-Argument modification is part of the interface, but not an obvious part.
-
-Immutability may cost significant resources since every value counts for a new space in memory.
-
-un método que no devuelve nada no implica que vaya a modificar los argumentos que se le pasan.
-pero sí que molaría que si cambias un objeto, que no lo devuelvas.
-
-este es uno de los motivos por los que en python hay objetos mutables e inmutables, si quieres estar seguro de que no se modifica el objeto, usa uno inmutable.
-
-si queda claro no veo problema porque el usuario podría enviar una copia si quiere conservar el original
-
 ## you can test every procedure and make sure that it complies with its interface/contract
 
 Una forma de comprobar que la interfaz el contrato funciona es hacer test y es una manera muy recomendable. Si no tienes test no sabes si la característica es tan implementando realmente funciona o no, sobre todo si luego la cambias la implementación
@@ -122,6 +69,9 @@ Compile-time polymorphism (Overloading) - allows a function to have multiple imp
 ## desventajas de OOP
 
 Una desventaja de la programación orientada a objetos es que, para un principiante, es más compleja que la procedural y otra es que suele ser más verbose.
+
+Procedural is more simple than object oriented and functional, so if you are starting in programming, procedural might be easier.
+
 
 ## lists comprenhesions
 

@@ -12,3 +12,6 @@ website:
     contents:
       - text: "Introduction"
         href: index.qmd
+      - text: "Procedural"
+        href: "procedural.qmd"
+  
