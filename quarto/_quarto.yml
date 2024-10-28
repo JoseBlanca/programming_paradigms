@@ -14,4 +14,7 @@ website:
         href: index.qmd
       - text: "Procedural"
         href: "procedural.qmd"
-  
+      - text: "Objects and classes"
+        href: "objects_and_classes.qmd"
+      - text: "Functional programming"
+        href: "functional_programming.qmd"

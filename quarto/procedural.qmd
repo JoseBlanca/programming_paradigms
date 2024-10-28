@@ -383,6 +383,8 @@ If you abuse of the global scope:
 - Be aware, there might be dragons ahead.
 - You have been warned.
 
+You can read more about [scopes and namespaces](https://docs.python.org/3/tutorial/classes.html#python-scopes-and-namespaces) in the Python official documentation.
+
 ### Passing data to a function, function arguments
 
 So, when the function requires some data to carry an action, we should pass that data explictly to the function.

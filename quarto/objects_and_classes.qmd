@@ -1,0 +1,265 @@
+---
+title: "Object oriented programming"
+format:
+  live-html:
+    mermaid:
+      theme: neutral
+---
+
+For decades functions were the main tool to modularize the software, but around 1980 a new paradigm [became popular](https://en.wikipedia.org/wiki/Object-oriented_programming#History): object Oriented Programming (OOP).
+OOP did not replaced procedural programming, both paradigm coexist, and they are the most common programming paradigms used today to organize the code.
+There are languages, like C, that only use functions, others like Java, that only use classes, the building block in Object Oriented Programming and still others like Python and Rust, that are multiparadigm, they allow the programmer to chose.
+
+## Classes
+
+In Object Oriented Programming the [class](https://en.wikipedia.org/wiki/Class_(computer_programming)) the main building block.
+To introduce the concept of the classes let's write a small program, using first a procedural approach.
+
+```{pyodide}
+def calc_circle_area(width, height):
+    return width, height
+
+
+def print_circle(width, height, area):
+    print(f"The circle has a width of {width}, a height of {height}, and an area of {area}.)
+
+
+circle_width = 2
+circle_height = 3
+area = calc_circle_area(circle_width, circle_height)
+print_circle(circle_width, circle_height, area)
+```
+
+Now let's do the same, but using classes. (In general any program that you can think of can be programmed using both paradigms).
+
+```{pyodide}
+class Circle:
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+    
+    def calc_area(self):
+        return self.width * self.height
+
+    # In this case, it might be better to create a property
+    #@property
+    #def area(self):
+    #    return self.width * self.height
+    # But let's not get ahead of ourselves
+
+    def print(self):
+        print(f"The circle has a width of {self.width}, a height of {self.height}, and an area of {self.calc_area()}.)
+
+circle1 = Circle(2, 3)
+circle1.print()
+
+circle2 = Circle(24.5, 4.3)
+circle2.print()
+```
+
+There's quite a bit to unpack here.
+We have defined a [class](https://docs.python.org/3/tutorial/classes.html), with three methods: __init__, calc_area, and print.
+
+A method is a function defined within a class. Methods are called with the syntax "object.method_name()".
+This is a syntax that you have already seen in Python, e.g. text_string.upper() or my_list.append(item).
+
+In this class there is a special method: __init__.
+Every time that we want to initialize an object the class uses this special method.
+You can create Python classes without the __init__ method, but this is because Python will create a default __ini__method for you.
+
+In the previous example the class that we have defined is Circle, and we have also created two objects of that class: circle1 and circle2.
+An object is an instance of the class, in these case every object is a particular circle.
+
+The class has properties, data associated, like, in this case, width and height, and also defines behaviours defined by its methods. Methods are functions and functions are actions that act on data. So a class has methods, actions, behaviors, but also has data associated with it, and this data is associated to each object, to each instance of the class, in this case, to each circle.
+Sometimes it is useful to think of a class as the representation of a type of thing, like rectangles, cars, or web servers. The methods would represent the behaviour of that type of thing and its properties would be the data associated to every particular instance, every object, of that type of thing.
+
+You could think of a class as a data structure, like a dictionary, with some methods that act on the data stored in that dictionary. It would be something like this:
+
+```{pyodide}
+def circle_area(circle):
+    return circle['width'] * circle['height']
+
+
+def circle_print(circle):
+    area = circle_area(circle)
+    print(f"The circle has a width of {circle["width"]}, a height of {circle["height"]}, and an area of {area}.)
+
+
+circle1 = {"width": 2, "height":3}
+circle_print(circle1)
+
+circle2 = {"width": 24.5, "height":4.3}
+circle_print(circle2)
+```
+
+So, you could almost think of a class as syntactic sugar that bounds a data structure, like a dictionary, to some functions (that in the class are called methods, not functions).
+That data structure that holds the specific data of each object, like circle1 and circle2, in the class methods is represented by *self*. That is why, in Python, every standard class method has as a first argument *self*, the argument that represents the data for the object.
+In some languages, like in the old good Perl, this association of some methods to a data structure to create a clas is explicit, they use the bless statement. They bless the data stored in a data structure with the methods/functions located in what they call a package, that is a kind of Perl module.
+
+## Encapsulation
+
+### Classes and modularity
+
+So, classes we borned by the fussion of data structures and methods that worked on those data structures.
+One could ask, if we have been able to write our circle logic using a dict as a data structure and a couple of functions are classes really necessary and, moreover, why bother?
+Well, classes are not really necessary. There are many languages, like C, that do not use classes at all, because they do not even have the concept, and those languages are used to create huge and successfull software projects. For instance, the Linux kernel, that is mostly C, has more than 28 millions lines of code, more than 80 thousand commits and more than 20 thousand contributors that have done over a million of commits.
+
+So clases are not necessary, but they can be very convinient, and one reason is because the deepen the modularity even more than mere functions. By using classes we can isolate the different pieces that comprise the software even more effectively than with functions because they merge the data structure and the behaviour the structure of the data becames a hidden detail implementation, it is not part of the interface anymore.
+In the function based circle implementation the data structure, in that case a dictionary, was part of the interface of the circle_print funtion, while in the print method of the Circle class the way in which the data is given to the method is not a concern for the user.
+Classes are a way of approaching the question of how data and action, data structure and functions relate. In the procedural approach data structures are part of the interface, whereas in the class they are mostly hidden, they are almost an implementation detail.
+This tight relation between data and behaviour is known as [encapsulation](https://en.wikipedia.org/wiki/Encapsulation_(computer_programming)).
+The class interface is smaller than combined interface of the functions required to do the same job.
+So classes are convinient, among other reasons, because they allow to modularize the software projects more effectively that the functions.
+This is one of the major appeals of the Object Oriented Programming, the modularization is deeper than in the procedural case and that facilitates, for instance, the coordination of big software projects.
+With the right design object oriented programs are easier to scale.
+
+You can create huge projects based on the procedural paradigm, but you have to be very disciplined when defining and changing the data structues to have a modularized project easy to maintain and in which many groups of programer can work at the same time in a coordinated way.
+For instance, you could collect the functions that work with a particular data structure in the same place, like in a file, a Python module. In that way if the data structure would had to be changed, the functions that should be modifed would all be collected together. This kind of procedural approach would be a kind of limited encapsulaiton and would have some of the benefits of the object oriented paradigm.
+
+### Private and public attributes
+
+Classes can hide part of its data and methods from the rest of the program to create an even smaller interface, and the smaller the interface, the looser the conection between the code modules and the more maintainable and extensible the code will be.
+So, we can decide that of all the functionality implemented by the class and all of the data defined in an object we will only show part as the public interface.
+This is also part of the encapsulation provided by the object oriented approach, another way of reducing the interface available to the rest of the program.
+
+The main advantage of having private attributes is that they only are used in a limited part of the code, and are not used in the rest of the code base. That means that when we need to change something related to a private attribute the change will be limited to the class, and maybe to their descendants (more about later). 
+This is particularly useful in large projects where changes are inevitable. In contrast, in procedural programming, a change in one part of the program may require changes in several other parts, making it more complex and time-consuming.
+As a general rule, make public as few attributes as possible to guarantee a high level of modularity.
+
+In other programming languages they have ways of enforcing the distinction between private and public methods and properties, but that is not the case in Python.
+In Python everything can be accessed and privacy is a mere convention.
+Methods and properties whose names start with an underscore are supposed to be private, they should be only accessed by the class methods.
+That is not enforced by the language, but be aware that Python maintainers will asume that you understand and honor this convention and, thus, they will change these "private" attributes without previous warning.
+
+## Objects store state
+
+Sometimes it is necessary to keep track of a state between function calls.
+In the procedural approach that can be done by storing the state in a variable that is passed every time to a function.
+Let's imagine that we want to count how many times a function has been called, we could write something like this:
+
+```{pyodide}
+def print_hello(num_times):
+    print("Hello")
+    num_times += 1
+    return num_times
+
+
+def main():
+    num_times = 0
+    num_times = print_hello(num_times)
+    num_times = print_hello(num_times)
+    print(f"The function has been called {num_times}")
+
+
+main()
+```
+
+This would work, but it is a little bit cumbersome to pass and return the num_times variable everytime to the function.
+Alternatively we could use a global variable
+
+```{pyodide}
+NUM_TIMES = 0
+
+def print_hello():
+    print("Hello")
+    global NUM_TIMES
+    NUM_TIMES += 1
+
+
+def main():
+    print_hello()
+    print_hello()
+    print(f"The function has been called {NUM_TIMES}")
+
+
+main()
+```
+
+This is much more convinient and requires less code, but we are making use of a global variable to keep track of the state, the number of times that the functions has been called, and global variables break modularity and, thus, are prone to create maintainability problems.
+
+Objects provide a solution that it is both convenient and modular because it does not use global variables.
+
+```{pyodide}
+class Greeter:
+    def __init__(self):
+        self.number_of_times = 0
+
+    def print_hello(self):
+        print("Hello")
+        self.number_of_times += 1
+
+
+def main():
+    greeter = Greeter()
+    greeter.print_hello()
+    greeter.print_hello()
+    print(f"The function has been called {greeter.number_of_times}")
+
+
+main()
+```
+
+The number_of_times variable is an object property, so it is not shared between objects, it will reflect only how many times the print_hello method has been called in a particular object.
+
+
+```{pyodide}
+class Greeter:
+    def __init__(self):
+        self.number_of_times = 0
+
+    def print_hello(self):
+        print("Hello")
+        self.number_of_times += 1
+
+
+def main():
+    greeter1 = Greeter()
+    greeter1.print_hello()
+    greeter2 = Greeter()
+    greeter2.print_hello()
+    print(f"The function has been called {greeter1.number_of_times} on greeter1")
+    print(f"The function has been called {greeter2.number_of_times} on greeter2")
+
+
+main()
+```
+
+However, classes even allow us to create class level variables shared by all object if we need to.
+
+```{pyodide}
+class Greeter:
+    number_of_times = 0
+
+    def print_hello(self):
+        print("Hello")
+        self.__class__.number_of_times += 1
+
+
+def main():
+    greeter1 = Greeter()
+    greeter1.print_hello()
+    greeter2 = Greeter()
+    greeter2.print_hello()
+    print(f"The function has been called {greeter1.number_of_times}")
+    print(f"The function has been called {greeter2.number_of_times}")
+
+
+main()
+```
+
+So, this is another big advantage of the Object Oriented paradigm: it allows us to keep track of a state between calls in a very natural way without having to use global variables.
+
+## Abstraction
+
+Classes allow to reuse code by creating hierarchies of classes that share some of their behaviours.
+This is a feature that I do not usually need and that some languages with object oriented capabilities, like Rust, do not implement or do not encourage.
+
+Another way to share behaviors between different clases is to just use the idea of a shared behaviour, that is, to have similar interfaces.
+In Python this kind of ideas are widely used. For instances there are core pythonic ideas that are just interfaces, shared behaviours, like: [file-objects](https://docs.python.org/3/glossary.html#term-file-object), [iterators](https://docs.python.org/3/glossary.html#term-iterator), [sequences](https://docs.python.org/3/glossary.html#term-sequence) or [mappings](https://docs.python.org/3/glossary.html#term-mapping).
+If you are interested in these ideas I recommend to you the Real Python tutorial on [interfaces](https://realpython.com/python-interface/).
+
+## Procedural vs object oriented
+
+Python, as we have seen, allows us to write procedural and object oriented code.
+You can chose different approaches to solve different problems and you can combine them.
+That forces you to decide what to do in each occasion and there are no strict rules to follow, you will develop your style by reading and writting code.

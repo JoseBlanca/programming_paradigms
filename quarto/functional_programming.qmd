@@ -1,0 +1,437 @@
+---
+title: "Functional programming"
+format:
+  live-html:
+    mermaid:
+      theme: neutral
+---
+
+Another way in which we can approach the structure of a program is Functional Programming.
+Procedural, Object Oriented and Functional Programming are usually taught as three alternative paradigms, and the last one is normaly the one explanied in more theoretical terms.
+This kind of theoretical explanation might have its uses, but you won't find it here.
+In my day to day work I use functional programming concepts all the time, but always motivated by a practical need.
+This approach is especially useful when dealing with big data sets.
+
+Let's do an example.
+Imagine that we want to sum all the numbers from 1 to 9.
+We could do it with the following code.
+
+```{pyodide}
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+accumulated_sum = 0
+for i in range(len(numbers)):
+    accumulated_sum += numbers[i]
+
+print(accumulated_sum)
+```
+
+## Iterators
+
+### Iterators and iterables
+
+However, we don't need to create a list to sum the first 1000 numbers, we only need to get those numbers one after the other, one at a time.
+In Python that's the difference between a [sequence](https://docs.python.org/3/glossary.html#term-sequence) and an [iterator](https://docs.python.org/3/glossary.html#term-iterator).
+
+Lists or strings are examples of sequences, they are classes that:
+
+- have a length, they can return the number of items that they contain
+- allow for random access, we can access every item by its position in the sequence
+
+We can use those properties to get a list of numbers summed.
+
+```{pyodide}
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+accumulated_sum = 0
+for i in range(len(numbers)):
+    accumulated_sum += numbers[i]
+
+print(accumulated_sum)
+```
+
+But, we could accomplished the same goal, with much less. We don't need the items to be ordered, or to know the number of items or, even, to have all the numbers in memory at the same time,  we just need access to each element, one at a time, that's all.
+
+```{pyodide}
+accumulated_sum = 0
+for number in range(1, 10):
+    accumulated_sum += number
+
+print(accumulated_sum)
+```
+
+This time we have used [range](https://docs.python.org/3/library/functions.html#func-range), an object that does not hold the number in memory, but that creates them one at a time when the for iteration demmands it.
+So we have added the numbers using much less memory.
+What we have done is to approach the problem using the iterator interface.
+An iterator is an object that:
+
+- represents a stream of data, it returns its items one at a time.
+- it raises a [StopIteration](https://docs.python.org/3/library/exceptions.html#StopIteration) exception when there are no more items to return
+
+Let's some the first ten numbers in a way that really reflect the iterator protocol.
+
+```{pyodide}
+numbers = range(10)
+
+accumulated_sum = 0
+while True:
+    try:
+        number = next(numbers)
+    except StopIteration:
+        break
+    accumulated_sum += number
+
+print(accumulated_sum)
+```
+
+We get each number, one at at time, by calling next on the iterator until the iterator raises a StopIteration, and then we break the loop, we are done.
+That is in fact how for works internally, it keeps calling next on the given object until it gets a StopIteration.
+
+Well, in fact, although we can pass iterators to for, we don't need to. Lists, for instance, are not iterators.
+If you try to call next on a list you'll get an error: "TypeError: 'list' object is not an iterator"
+
+```{pyodide}
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+next(numbers)
+```
+
+Lists are [iterable](https://docs.python.org/3/glossary.html#term-iterable), and we can create iterators from iterables by using the [iter](https://docs.python.org/3/library/functions.html#iter) built-in function.
+
+```{pyodide}
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+numbers_iterator = iter(numbers)
+print(next(numbers_iterator))
+print(next(numbers_iterator))
+print(next(numbers_iterator))
+print(next(numbers_iterator))
+print(next(numbers_iterator))
+print(next(numbers_iterator))
+print(next(numbers_iterator))
+print(next(numbers_iterator))
+print(next(numbers_iterator))
+next(numbers_iterator)
+```
+This is, more or less, what for does and in that way it can deal with both iterables and iterators.
+
+Python has a rich functionality prepared to make use of the iterator interface.
+For instance, we could even skip the for loop entirely to sum the numbers.
+
+```{pyodide}
+print(sum(range(10)))
+```
+
+Now that we don't need to hold this numbers in memory we can use much less memory and sum the numbers much faster.
+
+```{pyodide}
+print(sum(range(10000000)))
+```
+
+If we try to do the name creating the list we will need more time and memory.
+
+```{pyodide}
+numbers = list(range(10000000))
+accumulated_sum = 0
+for number in numbers:
+    accumulated_sum += number
+print(accumulated_sum)
+```
+
+[range](https://docs.python.org/3/library/functions.html#func-range) is creating the numbers in a [lazy](https://en.wikipedia.org/wiki/Lazy_initialization) way, it only creates a number when it is finnaly required.
+The opposite approach, the one used by the list, that creates all items ahead of time is known as **eager**.
+Lazy approaches delays [creation](https://en.wikipedia.org/wiki/Lazy_initialization) or [computation](https://en.wikipedia.org/wiki/Lazy_evaluation) as much as possible, while eager create or compute as soon as they are instantiated.
+
+But before we delve into the kind of functionallity allowed by this approach, let's talk about the generators, a very convenient mechanism to create our own iterators.
+
+Many common Python objects, although you might think that are sequences, are, in fact, iterators: objects returned by the dict keys, values and items, range or opened text files.
+
+### Generators
+
+[Generators](https://docs.python.org/3/glossary.html#term-generator) look deciverly similar to a standard function, with the only difference that they use the [yield](https://docs.python.org/3/reference/simple_stmts.html#yield) statement instead of [return](https://docs.python.org/3/reference/simple_stmts.html#return).
+However, generators behave quite differently than standard functions.
+
+```{pyodide}
+def numbers_generator(max_number):
+    for number in range(max_number):
+        yield number
+
+print(list(numbers_generator()))
+
+def numbers_funct(max_number):
+    for number in range(max_number):
+        return number
+
+print(numbers_funct())
+```
+
+While the function only returns one item and stops, the generator is capable of yielding one item after another until it runs out of items.
+The call to the generator does not return any item at all, but a [generator iterator](https://docs.python.org/3/glossary.html#term-generator-iterator) object that, as any other iterator, will be able to yield items every time we ask for them using next.
+
+While each function call is independent, the function restart its execution every time from the very begining, generator iterators resume its execution every time we ask them to yield a new item.
+
+```{pyodide}
+def greeting_generator():
+    print(1)
+    yield("Hi!")
+    print(2)
+    yield("Hello!")
+    print(3)
+    yield("Bye!")
+
+greetings = greeting_generator()
+# greetings is a generator iterator
+print(next(greetings))
+print(next(greetings))
+print(next(greetings))
+```
+
+Generators are a very convenient way of creating our own iterators.
+For instance, we could create a generator that yields the first n number (a very similar functionality that the one provided by the built-in range).
+
+
+```{pyodide}
+def first_numbers(n):
+    i = 0
+    while True:
+        yield i
+        i += i
+        if i >= n:
+            break
+
+print(list(first_numbers(10)))
+```
+
+Or we could create a generator of endless random numbers.
+
+```{pyodide}
+import random
+from itertools import islice
+
+def random_numbers():
+    while True:
+        yield random.random()
+
+
+numbers = random_numbers()
+print(list(islice(numbers, 10)))
+```
+
+### Iterators are consumed
+
+Iterators are great tools, but you have to be aware of their behaviour, in particular, they are consumed.
+
+```{pyodide}
+numbers = range(10)
+print(list(numbers))
+print(list(numbers))
+```
+
+Lists, on the contrary, are not consumed, we could go through them as many times as we want to.
+
+```{pyodide}
+numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+print(list(numbers))
+print(list(numbers))
+print(list(numbers))
+print(list(numbers))
+```
+
+Think of iterators a stream of items that is seen only once.
+You should take into account this behaviour when creating algorithms that work with iterators.
+Although once you get used to them that won't be a problem for many algorithms, it can be challenging at the begining to think on how to approach certain problems using iterators.
+Python has a very rich functionality to use iterators in your programs, like the itertools module and the map, filter and reduce functions.
+
+### itertools
+
+If you plant to use iterators at all you should take a look at the [itertools](https://docs.python.org/3/library/itertools.html#itertools.islice) module, and if you want more of these kind functionality you could check out the [more-itertools](https://github.com/more-itertools/more-itertools) package.
+
+
+## Pure and inmutable
+
+### Pure functions
+
+A [pure function](https://en.wikipedia.org/wiki/Pure_function) is a function that:
+
+- given the same arguments it will return the same values
+- does not have any side effect
+
+Pure functions have quite advantages over function that, for instance, have side effects, they do not change any external state.
+As we discussed in the procedural approach, side effects destroy modularity and make code more difficult to reason about and maintain.
+
+### Inmutable objects
+
+Changing the state of the objects passed to the function is another way in which modularity can be broken.
+So, programming is much easier, for instance code is much easier to debug, when we don't mutate the state of the objects passed to the function.
+
+It is nice to have functions that do not change the objects that we borrow to them, but the caller does not allways have control over the function implementation and one way to enforce this is to pass to the function only inmutable objects.
+
+### Cache and paralellization
+
+When using pure functions and inmutable objects we can use several, very easy to apply, tricks to improve the performance of our code.
+
+We could, for instance, cache the result of time consuming computations. Since the function given the same arguments always returns the same values and the arguments are not changed we can return a precomputed instance of the result.
+
+
+Pure functions and inmutable objects are also very convenient when dealing with large amounts of processing because it is much more easier to paralelize programs built with them.
+
+## Functions are first class citizens
+
+In Python, like almost anything else, functions are just objects, and they can be used as arguments to other functions or can be returned by other functions. The [functools](https://docs.python.org/3/library/functools.html) has many utilies that take functions as arguments and that, in most cases, return functions.
+
+### lru_cache
+
+The [lru_cache](https://docs.python.org/3/library/functools.html#functools.lru_cache) [decorator](https://docs.python.org/3/glossary.html#term-decorator) will cache the result of the function, so if you call the function several times with the same arguments, it will return the cached result and save you some possible expensive computation.
+This, in some cases, can improve code performance by a lot.
+
+```{pyodie}
+from functools import lru_cache
+
+@lru_cache
+def sum_numbers(a, b):
+    print(f"Summing {a} + {b}")
+    return a + b
+
+print(sum_numbers(1, 1))
+print(sum_numbers(1, 1))
+print(sum_numbers(2, 2))
+print(sum_numbers(1, 1))
+print(sum_numbers(2, 2))
+```
+
+Of course, lru_cache will not behave propertly with non-pure functions or with mutable arguments.
+
+### partial
+
+[partial](https://docs.python.org/es/3/library/functools.html#functools.partial) is another great utility of the functools module, it returns a new function which has some of their arguments precalled (or freezed).
+
+```{pyodie}
+from functools import partial
+
+def sum_numbers(a, b):
+    return a + b
+
+
+add_2 = partial(sum_numbers, b=2)
+print(add_2(1))
+print(add_2(7))
+```
+
+### lambda
+
+[lambdas](https://docs.python.org/3/tutorial/controlflow.html#lambda-expressions) are small anonymous functions, functions with no name.
+They are usually passed as arguments to other functions.
+One very common use case is to use them as the key argument of the sorted funtion when [sorting](https://docs.python.org/3/howto/sorting.html).
+
+```
+student_tuples = [
+    ('john', 'A', 15),
+    ('jane', 'B', 12),
+    ('dave', 'B', 10),
+]
+by_age = sorted(student_tuples, key=lambda student: student[2])
+print(by_age)
+by_name = sorted(student_tuples, key=lambda student: student[0])
+print(by_name)
+by_grade = sorted(student_tuples, key=lambda student: student[1])
+print(by_grade)
+```
+
+## Comprenhensions
+
+All this functional utilities can be combined with several comprenhensions:
+
+- [list comprehension](https://docs.python.org/3/glossary.html#term-list-comprehension)
+- [dict comprehension](https://docs.python.org/3/glossary.html#term-dictionary-comprehension)
+- [set comprehension](https://docs.python.org/3/glossary.html#term-set-comprehension)
+- [generator expression](https://docs.python.org/3/glossary.html#term-generator-expression)
+
+Comprehensions provide a very consise way to create lists, dict, sets and generators by computing its values.
+
+The general idea is: for each element in an iterable if the element matches a condition do something with the element and store the result in a list/dict/set or generator.
+
+```{pyodide}
+def number_is_odd(number):
+    return bool(number % 2)
+
+def process_number(number):
+    return number **2
+
+odds_squared = [process_number(number) for number in range(10) if number_is_odd(number)]
+
+# or everything in one line
+
+odds_squared = [number**2 for number in range(10) if number % 2]
+print(odds_squared)
+```
+
+The if condition is optional, we can create comprehensions without it.
+
+```{pyodide}
+nums_squared = [number**2 for number in range(10)]
+print(nums_squared)
+```
+
+The syntaxis for the dict and set comprehensions is very similar.
+
+```{pyodide}
+# dict
+nums_squared = {number: number**2 for number in range(10)}
+print(nums_squared)
+
+# set
+nums_squared_set = {number**2 for number in range(10)}
+print(nums_squared_set)
+```
+
+And, finnaly, if we want, instead of creating a list eagerly, we could create a lazy generator, but changing the square brackets by parentheses.
+
+
+```{pyodide}
+odds_squared = (number**2 for number in range(10) if number % 2)
+print(odds_squared) # this is a generator iterator object
+
+odds_squared = list(odds_squared) # here the computation is carried out because we instantiate the full list
+print(odds_squared)
+```
+
+## filter, map, reduce
+
+Another very useful, and one of the most common, way of using the functional approach is to use [filter](https://docs.python.org/3/library/functions.html#filter), [map](https://docs.python.org/3/library/functions.html#map) and [reduce](https://docs.python.org/3/library/functools.html#functools.reduce).
+All these utilities are design to work with iterators, with streams of data, and the [map/reduce](https://en.wikipedia.org/wiki/MapReduce) pattern was thought as a tool to process big quantities of data.
+
+```{pyodide}
+from functools import reduce
+numbers = range(10000)
+
+odd_numbers = filter(lambda number: number % 2, numbers)
+odds_squared = map(lambda number: number**2, odd_numbers)
+sum_adds_squared = reduce(lambda x, y: x + y, odds_squared)
+```
+
+This is a somewhat convoluted way of writting the following algorithm:
+
+```{pyodide}
+accummulated_sum = 0
+for i in range(10000):
+    if number % 2:
+        accumulated_sum += i**2
+print(accmulated_sum)
+```
+
+The map reduce approach splits the iteration functionality into the map and reduce functions, we have transformed the for, a loop statement, into a series of functions.
+This approach offers the possibility of creating very sophisticated map and reduce functions that can carry out, for instance, the same computation in parallel.
+Python, for instance, has a multiprocessing [map](https://docs.python.org/3/library/multiprocessing.html#multiprocessing.pool.Pool.map).
+
+```{pyodide}
+from functools import reduce
+from multiprocessing import Pool
+numbers = range(10000)
+
+odd_numbers = filter(lambda number: number % 2, numbers)
+with Pool(5) as pool:
+    map = pool.imap_unordered
+    odds_squared = map(lambda number: number**2, odd_numbers)
+sum_adds_squared = reduce(lambda x, y: x + y, odds_squared)
+```
+
+If we can transform the computation that we are interested in carrying out into a series of pure functions, we can use this trick to do massive, and time and and memory efficient, computations in parallel.
+This is one of the main practial uses of the functional approach.
