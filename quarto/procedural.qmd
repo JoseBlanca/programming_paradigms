@@ -8,34 +8,36 @@ format:
 
 ## It all started with the spaghetti
 
-At the begining, when computers were simple and programs were very small and performed just one task programmers didn't need to worry about dividing the code in sections that dealt with different tasks.
-However, very soon computers became more powerful, programs grew and code became unwieldy thus the [spaghetti code](https://en.wikipedia.org/wiki/Spaghetti_code) was born.
-Programmers thought about how to solve the issue and they came with the idea that they had to divide the code into small subtasks. This allows for:
+At the begining, when computers were simple, when programs were very small and performed just one task programmers didn't need to worry about dividing the code in modules/parts/sections that dealt with different tasks.
+However, very soon computers became more powerful, programs grew and code became unwieldy and the [spaghetti code](https://en.wikipedia.org/wiki/Spaghetti_code) was born.
+Programmers thought about how to solve the issue, on how to unravel the spaghetti, and they came with the idea that they had to divide the code into small subtasks. This allows for:
 
 - The reuse of these small pieces of functionality.
 - The division of labor in teams of programmers in which different people can implement and maintain different parts of the code.
-- The testing of the functionality of every piece of code because we have a well defined idea of what that piece of code is supossed to do.
+- The testing of the functionality of every piece of code. If every module has a well defined task to do, we can test if that code is doing what is supposed to be doing.
 
-If you are writting a small script that performs a just one very well defined and small task, it's OK not to structure your code. But for anything else, thinking about the structure is one of the most important tasks of the programer; and the main question to answer is: how do I divide this code into pieces that:
+![Spaghetti vs structured](images/spaghetti_vs_structured.jpg)
+
+If you are writting a small script that performs a just one very well defined and small task, it might be OK not to structure your code. But for anything else, thinking about the structure is one of the most important programming tasks; and the main question to answer is: how do I divide this code into pieces that:
 
 - perform only one task
 - have access only to the data that they require to complete the task
 - have a well defined interface
 
-Of course, not all programmers were experienced and disciplined and lots of code became unstructured and entangle messes, they became spaghetti code that sometimes worked, but that were unmaintainable: bugs were difficult to fix, features impossible to add, and new programmers unfamiliar with the code were not capable of working with it.
+Of course, not all programmers are experienced and disciplined and lots of code is unstructured, an entangle mess. Spaghetti code might work, but it is unmaintainable: bugs are difficult to fix, features impossible to add, and new programmers unfamiliar with the code will have a hard time working with it.
 
 Fortunately programmers are resourceful, and very soon they realized that the key to maintainable code was to divide it in small pieces that performed a well defined task and that communicated with the rest of the program only through its declared interface.
-Different [programming](https://en.wikipedia.org/wiki/Programming_paradigm) paradigms have been proprosed to help structuring the code, like [Object Oriented Programming](https://en.wikipedia.org/wiki/Object-oriented_programming) (OOP) or [Functional Programming](https://en.wikipedia.org/wiki/Functional_programming), but the most basic one, a very used one, was [Procedural Programing](https://en.wikipedia.org/wiki/Procedural_programming).
+Different [programming paradigms](https://en.wikipedia.org/wiki/Programming_paradigm) have been proprosed to help structuring the code, like [Object Oriented Programming](https://en.wikipedia.org/wiki/Object-oriented_programming) (OOP) or [Functional Programming](https://en.wikipedia.org/wiki/Functional_programming), but the most basic one, and a very used one, is [Procedural Programing](https://en.wikipedia.org/wiki/Procedural_programming).
 
 ## Functions to disentangle the spaghetti
 
-They thought about how to create these subtasks, these small pieces of functionallity and they created the idea of the [function](https://en.wikipedia.org/wiki/Function_(computer_programming)).
+Programmers thought about how to create these subtasks, these small pieces of functionallity, and they created the idea of the [function](https://en.wikipedia.org/wiki/Function_(computer_programming)).
 By the way, functions are also known as procedures, subroutines and many other, more or less, synonymous terms, but we are just going to use the term function.
 They are the key tool used to structure the code, they are the fundamental building block in all the main programming paradimgs: Procedural, Object Oriented and Functional Programming.
 
 ### Functions are isolated blocks of code
 
-A function is a named section of a program, a block of code, a sequence of instruction grouped under a single name, that performs a specific task and that can be invoked, called, by other parts of the program.
+A function is a named section of a program, a block of code, a sequence of instructions grouped under a single name, that performs a specific task and that can be invoked, called, by other parts of the program to carry out that task.
 In Python functions are [defined](https://docs.python.org/3/tutorial/controlflow.html#defining-functions) by using the [def](https://docs.python.org/3/reference/compound_stmts.html#def) statement.
 
 ```{pyodide}
@@ -48,7 +50,7 @@ print_hello()
 ```
 
 A function is a somewhat isolated block of code, a box with some inputs and some outputs.
-They are somewhat similar to a mathematical function, they take some inputs, that could be some numbers of any other kind of data, they do some calculations, some transformations, and they might return a result.
+They are somewhat similar to a mathematical function, they might take some inputs, that could be numbers of any other kind of data, they do some calculations, some transformations, and they might return a result.
 
 ```{pyodide}
 # Function definition
@@ -65,7 +67,7 @@ flowchart LR
     subgraph call[function call]
         call_["call_circle_area(3)"]
         variable_passed["variable passed: 3"]
-        variable_returned["variable returned: circle_area"]
+        variable_returned["return variable stored in variable: circle_area"]
     end
 
     subgraph function[function calc_circle_area]
@@ -87,18 +89,23 @@ The function:
 - performs an action
 - might return some data out of the function
 
-It is useful to think about the function as actions on some data.
-Usually the data is a thing, like a cicle, that the function is an action performed on that thing, like calculting an area. So, functions are actions and the data is composed by nouns, take that into account when naming them.
+It is useful to think about the function as an action carried out on some data.
+Usually the data is a thing, like a cicle, and the function is an action performed on that thing, like calculting an area. Take that into account when naming the functions, they are actions and they take data related to things, nouns.
+A function name like "calc_circle_area()" reflects the action, a name like "circle_area()" does not.
 
 The function can be divided in:
 
 - an interface: the part of the function that interacts, interfaces, with the rest of the program
 - an implementation: the details about how the action is carried out
 
-Functions can be thought as as a lego piece that have a defined shape and that we could use in our projects every time that we need that particular shape.
-The interface of the function is its shape, everytime that we need to perform an action of a piece of data with that interface we can use that function, that block of code.
-And, when thinking about the program structure, it is useful to fix our attention of the interfaces of the different parts of the program, on the shapes of the different blocks, because that is how the whole program will fit together, through its interfaces. The implementation could be regarded almost as a detail.
-For instance, we could change the implementation the previous function without changeing its interface.
+A function can be thought as as a lego piece that has a defined shape and that we could use in our projects every time that we need that particular shape.
+
+![Functions are the fundamental bricks](images/lego_brick.jpg)
+
+The interface of the function is its shape, everytime that we need to perform an action on a piece of data we can use that function, that block of code, in the same way.
+
+When thinking about the program structure, it is useful to fix our attention of the interfaces of the different parts of the program, on the shapes of the different blocks, because that is how the whole program will fit together, through its interfaces. The implementation of each part could be regarded almost as a detail.
+For instance, we could change the implementation the previous function without changing its interface.
 
 ```{pyodide}
 from math import pi
@@ -113,13 +120,16 @@ def calc_circle_area(radius):
 circle_area = calc_circle_area(3)
 ```
 
-An interface is a kind of contract, we are committing ourselves to providing a functionality by providing a particular interface and as long as the caller continues using the same interface the function will continue honoring its functionality.
+An interface is a kind of contract, we are committing ourselves to providing a functionality that will be served by that particular interface, and as long as the caller continues using the same interface the function will continue honoring the contract, providing its functionality.
+
+### The advantages of modularity
+
 This is one of the big advantages of the procedural programming, we can divide the program into smaller, and somewhat independent pieces of code, because we have limited the interaction between different parts of the program to their interfaces.
 We have turned a big piece of code into a collection of small interacting modules, a plate of spaghetti into a lego construction.
 This modularity is key and it helps with:
 
-- Understanding the code: it is easier to understand little pieces that have well defined responsabilities than a huge block of code. It is easier to understand how a lego construction works than a plate of spaghetti. New programers, or even programmers already familiar with the code will have a better time, a lower cognitive load, and will need less time understanding what the program is doing and how is doing it.
-- Bug fixing: it is much easier to locate which part of the code is responsible for a particular bug, like the calculus of the circle area if the functionality of the program is divided in small pieces. In case of an error in a program organized with procedures, a developer can locate and correct the error more quickly than in poorly organized code, leading to significant time and efficiency savings.
+- Understanding the code: it is easier to understand little pieces that have well defined responsabilities than a huge blocks of code. It is easier to understand how a lego construction works than a plate of spaghetti. New programers, or even programmers already familiar with the code, will have a better time, a lower cognitive load, and will need less time understanding what the program is doing and how is doing it.
+- Bug fixing: it is much easier to locate which part of the code is responsible for a particular bug, like the calculus of the circle area if the functionality of the program is divided into small pieces. If an error occurs in a program organized with functions, a developer can locate and correct the error more quickly than in a poorly organized code.
 - Testing: it is possible to check if a block of code is honoring its interface, because it now has an interface, a contract, to honor.
 - Extendability: new functionalities will be also easier to create. It is much easier to add new pieces to a lego construction than to a mess of spaghetti.
 
