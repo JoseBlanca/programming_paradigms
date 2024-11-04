@@ -133,9 +133,9 @@ This modularity is key and it helps with:
 - Testing: it is possible to check if a block of code is honoring its interface, because it now has an interface, a contract, to honor.
 - Extendability: new functionalities will be also easier to create. It is much easier to add new pieces to a lego construction than to a mess of spaghetti.
 
-### Using functions to structure our code
+### Code reuse
 
-Functions allow us to structure the code in parts, they enable breaking down a program into smaller, more manageable, modules, and, in that way, we can break complex problem into a series of simple tasks.
+Functions allow us to structure the code in parts, they enable breaking down a program into smaller, more manageable, modules, and, in that way, we can break a complex problem into a series of simple tasks.
 Imagine that we have a program that calculates the area of a rectangle.
 
 ```{pyodide}
@@ -144,7 +144,7 @@ area = rectangle["width"] * rectangle["height"]
 print(f"The rectangle with dimensions {rectangle['width']}x{rectangle['height']} has an area of {area}")
 ```
 
-This program accomplishes its task, but it we want to calculate the area for two rectangles we would have to repeat the same code twice.
+This program accomplishes its task, but if we want to calculate the area for two rectangles we would have to repeat the same code twice.
 
 ```{pyodide}
 rectangle1 = {"width": 10, "height": 5}
@@ -171,7 +171,7 @@ area = rectangle2["width"] * rectangle2["height"]
 fhand.write(f"The rectangle with dimensions {rectangle['width']}x{rectangle['height']} has an area of {area}\n")
 ```
 
-However, if we would had written our program using a function we would had avoided repeating the code in the first place.
+However, if we would had written our program using a function, we would had avoided repeating the code in the first place.
 We are [reusing the code](https://en.wikipedia.org/wiki/Code_reuse), and that is a nice principle to have in mind when we are programming.
 
 ```{pyodide}
@@ -203,6 +203,8 @@ calc_and_print_rect_area(rectangle2, file)
 
 In this case we have changed the function and the function calls (because we have to include the file object) to that function.
 
+### One function, one task
+
 Even better, we could structure the program by splitting the tasks carried out by the current function, calculating the area and printing the result, into two functions, one that calculates the area and another one that prints the result.
 
 ```{pyodide}
@@ -223,30 +225,30 @@ This change might seem small, but it has several advantages:
 
 - The program parts are now smaller and easier to understand and to test
 - We can calculate areas without printing them and we could print them without calculating them
-- We can create different printing functions, like one for printing in a file and another one for printing in the console.
+- We can create different printing functions, like one for printing into a file and another one for printing in the console.
 - Different aspects of the program, like the math operations and the output could be taken care by different people or teams of programers. This is not important for this small program, but it might be critical for larger ones.
 
 ## Scope
 
-Functions do not only structure the code in logical blocks, but they also limit the data that every one of those blocks can access.
-Functions have can use:
-
-- the variables that are defined inside them.
-- the arguments that we pass to them.
-
-We say that functions define a [scope](https://en.wikipedia.org/wiki/Scope_(computer_science)), an area of the program in which certain variables can be accessed.
-The code inside a function has its own variables, and those are not shared between functions and between the function and the rest of the code.
-To use a value inside a function, usually, we pass the variable to the function.
 To understand what do we mean when we say that we *pass* some data to a function we need to understand the concept of the scope.
 
 When we are programming we store and access data in memory.
 As we have seen, we refer to the data stored in memory by using variables.
 We could think that those variables, once they are created, are available in every part of our program.
-If you used that approach when you tried to build a program with more than a few lines of code, it would become very difficult to track which part of the program had changed a variable.
+If you would used that approach when you tried to build a program with more than a few lines of code, it would become very difficult to track which part of the program had changed a variable.
 So maintining those large programs would be very difficult.
 
-The scope defines where in the code a variable is available, and functions define their own scope.
+Functions do not only structure the code in logical blocks, but they also limit the data that every one of those blocks can access.
+Functions can use:
+
+- the variables that are defined inside them.
+- the arguments that we pass to them.
+
+We say that functions define a [scope](https://en.wikipedia.org/wiki/Scope_(computer_science)), an area of the program in which certain variables can be accessed.
 In a computer program not all data is available to every part of the code.
+The scope defines where in the code a variable is available, and functions define their own scope.
+The code inside a function has its own variables, and those are not shared between functions or between the function and the rest of the code.
+
 For instance, the variables that are defined inside a function are not available outside of the function.
 
 ```{pyodide}
@@ -276,6 +278,8 @@ print(2, name)
 We get a "'name' is not defined error" because the variable name was created inside the say_hello function, so in the say_hello scope, and is not available outside.
 A variable can only be used when is in the current scope.
 It is said that the function has a local scope in which its variables are available.
+
+To use a value inside a function, usually, we pass the variable to the function.
 
 Schema with the scope of a function call:
 
@@ -333,7 +337,6 @@ a_global_variable = 2
 Be careful because Python also has a global scope, and if you create the variable outside the function it will be available inside. We can use the variables defined in the global scope inside any function.
 
 ```{pyodide}
-
 GLOBAL_GREETING = "Hello!"
 
 def print_greeting():
@@ -345,48 +348,80 @@ print(GLOBAL_GREETING)
 
 In this case the variable name has been created in the global scope, it is a global variable available everywhere.
 In general, avoid creating global variables, specially if they are not inmutable constants.
-As a general rule the use of the global scope is discouraged, try not to use it.
+As a general rule, the use of the global scope is discouraged, try not to use it.
 If you think you need a global variable, think twice, in most cases is better not to use them.
-This is an advanced topic, but here's a tip for the future you, to keep states it might be much better to use objects, instances of a class, that global variables. For now, this is too advanced.
-Just remember, try very hard not to use global varibles, although you can allow some exceptions with some inmutable ones used for global configurations.
-It is common to use this kind of global variables, inmutables and related to configuration, and, by convention, in Python, people name them using all caps variable names.
+
+Here's a tip for the future you, to keep states it might be much better to use objects, instances of a class, than global variables.
+
+Just remember, try very hard not to use global varibles, although you can allow some exceptions with some inmutable ones used for global configurations. (By the way, if you follow the [PEP8](https://peps.python.org/pep-0008/) style guide, as you should, contants defined in the global scope are written with all capital letters.)
+It is common to use this kind of global variables, inmutables and related to configuration, and, by convention, in Python, people name them using all-caps variable names.
 
 ```{pyodide}
-I_AM_A_GLOBAL_VARIABLE = 'be_very_careful'
+NUM_THREADS = 1
 
-def some_function():
-    print(I_AM_A_GLOBAL_VARIABLE)
-
-some_function()
+def some_function_using_threads():
+    print(f"The number of threads is {NUM_THREADS}")
 ```
 
-Python discourages some uses of the use the global scope, and the behaviour of these variables is atypical.
+However, altering variables that belong to the global scope is discuraged and trying to do so can end up in unexpected behaviours.
 
 ```{pyodide}
-GLOBAL_GREETING = "Hello!"
+NUM_THREADS = 1
 
-def print_greeting():
-    GLOBAL_GREETING = "Hi!"
-    print(GLOBAL_GREETING)
+def some_function_using_threads():
+    NUM_THREADS = 2  # Python will create a new local scope variable,
+                     # this is not the variable as the global one
+    print(f"The number of threads is {NUM_THREADS}")
 
-print(GLOBAL_GREETING)
-print_greeting()
-print(GLOBAL_GREETING)
+some_function_using_threads()
+print(f"The global number of threads is still {NUM_THREADS}")
 ```
+
+If you try to change a global inmutable variable you might get an error.
 
 ```{pyodide}
-# This code will fail
-ACCUMULATED_SUM = 0
+NUM_THREADS = 1
 
-def sum_one():
-    # This error could be fixed, but you better not
-    ACCUMULATED_SUM += 1
-    print(ACCUMULATED_SUM)
+def some_function_using_threads():
+    NUM_THREADS += 1  # This will fail
+                      # You are trying to set a new local variable named
+                      # NUM_THREADS, but this variable has not been initialized
+    print(f"The number of threads is {NUM_THREADS}")
 
-sum_one()
-print(ACCUMULATED_SUM)
+some_function_using_threads()
 ```
 
+Python allows you to modify a global variable, but you have to explicitely ask for it by using the [global](https://docs.python.org/3/reference/simple_stmts.html#global) statement.
+
+```{pyodide}
+NUM_THREADS = 1
+
+def some_function_using_threads():
+    global NUM_THREADS
+    NUM_THREADS += 1
+    print(f"The number of threads is {NUM_THREADS}")
+
+some_function_using_threads()
+print(f"We have changed the global number of threads, now they are: {NUM_THREADS}")
+```
+
+The global statement is a nice remainder of the problem of altering the global state.
+
+In Python we can also alter the global state, the variables that belong to the global scope, without using the global statement.
+We can modify mutable objects referenced by variables that belong to the global scope.
+
+```{pyodide}
+CONFIG = {'num_threads': 1}
+
+def some_function_using_threads():
+    CONFIG['num_threads'] += 1
+    print(f"The number of threads is {CONFIG['num_threads']}")
+
+some_function_using_threads()
+print(f"We have changed the global number of threads, now they are: {CONFIG['num_threads']}")
+```
+
+In general, try not to abuse of the global scope. Functions were desing to modify only its scope and having side effects goes agaist the modularity achived by having functions in the first place.
 If you abuse of the global scope:
 
 - Proceed at your own risk.
@@ -410,7 +445,244 @@ person = "Jane"
 say_hello(person) # <- we are passing the variable person to the function
 ```
 
-Passing data to a function is easy, but a lot is going on under the hood:
+
+### return
+
+Scopes have also to be taken into account when getting a result out of the function.
+
+```{pyodide}
+def calc_rect_area(width, height):
+    area = width * height
+
+calc_rect_area(2, 3)
+# The next line will fail because area is not available in the global scope
+# The variable area belongs to the scope of the function.
+print("The area is:", area)
+```
+
+If we want to get data out of the function we use the [return](https://docs.python.org/3/reference/simple_stmts.html#the-return-statement) statement.
+Let's see how we can return data to the caller.
+
+```{pyodide}
+def calc_rect_area(width, height):
+    area = width * height
+    return area
+
+result = calc_rect_area(2, 3)
+print("The area is:", result)
+
+a, b = 4, 2
+print("The second area is: ", calc_rect_area(a, b))
+```
+
+We use the return statement to return a value generated in the function to the caller. Again, like in the arguments passed to the function, the caller will receive a new reference to the value stored in memory that can assign to a new variable.
+return is used to move a result in memory between scopes.
+For instance, in the previous example there is a variable, inside the function, named area, but in the first call we store the reference in a variable named result. area and result are two variables, two references to the same value stored in memory, but they are variables that belong to different scopes.
+In this case area belongs to the scope of the calc_rect_area function and result to the global scope.
+
+## Argument and return types
+
+Python is a dynamic language, it does not require to defined the types of the arguments and return values, and, by default, does not enforce those types even when they are defined.
+The type annotations are meant as a way of documenting the code.
+
+There are [typing tools](https://typing.readthedocs.io/), like [mypy](https://mypy-lang.org/) that can be used to enforce the use of the types, but they are not part of the language proper.
+
+## The function interface
+
+Now that we have talked about how to define functions, and how to pass and get data from them, we can deliniate what the function interface is.
+Remember, when thinking about a function, or any other form of modularizing the code, of dividing it in pieces, take into accounts two aspects:
+
+- the interface: how the function interacts with the rest of the program
+- the implementation: how the task is carried out
+
+For the structure of the program interfaces are more important than implementations, because if you change an implementation, for instance to speed it up or to fix a bug, the rest of the program will be unafected as long as you keep the interface.
+Think of the interface as a promise done to the rest of the program, as a contract that the function will honor. Thus, for the rest of the program, the implementation is just a detail, what matters is how to interact with that piece of the code.
+The program is a complex machine build with small, and hopefully understandable, pieces, and the interface is the shape of each piece.
+
+We could split the interface in two: the explicit or interface proper, and the implicit interface. We could also call to these two parts: interface and side effects.
+
+The interface proper is comprised by:
+
+- the function name, and possible the namespace in which that name is found
+- the arguments accepted by the function as well as its types
+- the returned values and its types
+
+A more suttle part of the interface, the implicit interface, or the [side effects](https://en.wikipedia.org/wiki/Side_effect_(computer_science)), an effect other than reading the value of the function arguments and returning the intended result. Side effects are interactions of the function with the rest of the program that are not explicitly declared like:
+
+- any modification of the state of the objects passed to the function that are not clearly stated in the interface and, thus, not expected by the user.
+- any modification to the mutable objects passed to the function not clearly estated
+- any modification of the global state, like changing the value of a global variable
+- any use of the global scope, like the reading of a global variable
+
+The interface proper is the stated contract that the function explicitely declares to follow and its at the base of the software modularity. Side effects are a modularity violation and a throw back to the spaghetti code, to an unmaintainable mess. (Although, in some cases these side effects can be useful, or even completely necesary).
+
+### Name and namespace
+
+The function name is a critical part of the function interface, if we would change it, the rest of the code that uses that function would have to be changed.
+
+The namespace, where the function can be found, is also important.
+For instance, in Python the [sqrt](https://docs.python.org/3/library/math.html#math.sqrt) function is located in the [math](https://docs.python.org/3/library/math.html) module of the standard library, so to use it we have to import it from there.
+
+```{pyodide}
+from math import sqrt
+
+print(sqrt(2))
+```
+
+If the Python developers were to change the location of the sqrt function, we would have to change our code accordingly. By the way, in the Python standard library there is a different [sqrt](https://docs.python.org/3/library/cmath.html#cmath.sqrt) function with a different interface, a function that return [complex](https://docs.python.org/3/library/functions.html#complex) numbers instead of [floats](https://docs.python.org/3/library/functions.html#float), and we differenciate between these two functions because they are imported from different namespaces, from different modules.
+
+```{pyodide}
+from math import sqrt as float_sqrt
+from cmath import sqrt as complex_sqrt
+
+print(float_sqrt(2))
+print(complex_sqrt(-1))
+```
+
+### Arguments
+
+The arguments accepted by the function, as well as its types, are also part of the interface, if we were to change the arguments required or accepted, we might have to change the rest of the code, the parts of the program that make calls to the modified function.
+
+### Returned values
+
+Returned values and types are also part of the interface, if we change what we return we will have to alter the calls to the function.
+
+By the way, I think that it is not a very good practice to change the number or type of the values returned depending on the function call.
+Imagine that we did a function that returned either a float or a complex number depending on the input.
+
+```{pyodide}
+from math import sqrt as fsqrt
+from cmath import sqrt as csqrt
+
+def sqrt(number:float) -> float|complex:
+    try:
+        result = fsqrt(number)
+    except ValueError:
+        result = csqrt(number)
+    return result
+
+result = sqrt(2)
+if isinstance(result, float):
+    print("Here we need code to deal with floats")
+else:
+    print("Here we need code to deal with complex")
+```
+
+This is a well defined interface, but the caller will have to check what is getting from the function.
+
+A better solution would be to make the caller/user of the function to deal with the two options, as the standard library sqrts functions do.
+
+```{pyodide}
+from math import sqrt as fsqrt
+from cmath import sqrt as csqrt
+
+value = 10
+try:
+    result = fsqrt(value)
+except ValueError
+    result = csqrt(value)
+```
+
+Now the caller is explicitly aware of the two possible types and will have to decide how to deal the situation.
+
+We have the same problem when we choose to return None when the function fails to calculate the result.
+
+```{pyodide}
+from math import sqrt as sqrt
+
+def sqrt(number:float) -> float|None:
+    try:
+        result = sqrt(number)
+    except ValueError:
+        result = None
+    return result
+
+res = sqrt(1)
+if res is None:
+    print("Function failed to calculate")
+else:
+    print(f"We can go on with our calculations, there's a result value: {res}")
+```
+
+In this case it'd be better to just let the error be raised, like the standard library sqrt function does.
+In that way the caller we'll be aware that a problem happened, and will have to deal the the error only when it needs to, and not in every call in the [call stack](https://en.wikipedia.org/wiki/Call_stack).
+
+### Object state change
+
+A function could change the state of an object passed as an argument.
+For instance, imagine that you are reading from a file and that you pass the file object to a function, that function could change the state of the file object, for instance by consuming from the file or by closing it.
+
+```{pyodide}
+from io import StringIO
+
+text = """Far out in the uncharted backwaters of the unfashionable end of the western spiral arm of the Galaxy
+lies a small unregarded yellow sun. Orbiting this at a distance of roughly ninety-two million miles is
+an utterly insignificant little blue green planet whose ape-descended life forms are so amazingly primitive
+that they still think digital watches are a pretty neat idea.
+"""
+
+# no function call
+file = StringIO(text)
+print(len(list(file)))
+
+def consume_one_line(file):
+    next(file)
+
+# with a function call that changes the state of the file object
+# by consuming one line
+file = StringIO(text)
+consume_one_line(file)
+print(len(list(file)))
+
+def bad_actor_closes_file(file):
+    file.close()
+
+# with a function call that changes the state of the file object
+# by closing it
+file = StringIO(text)
+bad_actor_closes_file(file)
+print(len(list(file)))
+```
+
+After calling to the different functions the behaviour of the program will be quite different, so the change in the state of the file object is a side effect, a implicit part of the function interface.
+It is always a good policy to informe to the caller/user of the function about these changes of state by making them explici
+t.
+### Gobal variables
+
+Another kind of side effect is to affect the global scope.
+This is highly discuraged, there is a global scope and many times it is reasonable to use it to read, for instance, inmutable configuration variables. But altering a variable in the global state takes us back to the path of unmaintanable spaghetti code.
+
+In Python the global scope is frequently used to store configuration constants. 
+
+Altering global variables makes the progam less modular because although the change of these variable could be considered part of the interface of the function, it is not an explicit part, it is not declared as an argument or as a return. So, by modifying global variables we get code that is more spaghetti like, and that so the program will be less maintainable.
+
+
+If you think that you need to alter the global state, think twice, because, in general, this is a very bad idea. If after thinking it carefully you still think you need to do it, think it again.
+There is another mechanism to store states between funcion calls that respects the modularity: classes and objects. Objects are modular and they allow us to store states between calls. That is one of the big difference between the procedural and the object oriented approach.
+
+### Value change of mutable objects
+
+In general, we could pass data to a function if two different ways by:
+
+- copying it
+- using a reference or a pointer
+
+In the first case we copy the value. Imagine that we were passing a variable that holds the integer 2. We would pass that data to the function by creating a copy of that number in a different part of the memory and, thus, the variable inside the function would reference to a different 2 than the variable outside the function.
+
+In the second case both variables, the one inside the function and the ones outside, would end up referencing the same value, the same 2.
+In some languages, like C or Rust one can chose how to proceed, do we want to copy the data or to create a reference or a pointer to it, and that is made explicit in the function interface.
+
+One of the Python objectives was to be simple, and that is why, maybe, his creator chose to avoid this complexty and to make all arguments passings to any function by reference. Moreover, in Python all variables are always references.
+
+```{pyodide}
+def say_hello(name):
+    # The data that we have passed is now in the local scope of the function
+    print("Hello", name)
+
+# person is a variable defined in the global scope
+person = "Jane"
+say_hello(person) # <- we are passing the variable person to the function
+```
 
 1. We have created a text string ("Jane"). That means that Python has created and stored a object of type str in memory.
 
@@ -475,109 +747,8 @@ flowchart TB
     classDef memory fill:#ccc
 ```
 
-## return
-
-Scopes have also to be taken into account when getting a result out of the function.
-
-```{pyodide}
-def calc_rect_area(width, height):
-    area = width * height
-
-calc_rect_area(2, 3)
-# The next line will fail because area is not available in the global scope
-# The variable area belongs to the scope of the function.
-print("The area is:", area)
-```
-
-If we want to get data out of the function we use the [return](https://docs.python.org/3/reference/simple_stmts.html#the-return-statement) statement.
-Let's see how we can return data to the caller.
-
-```{pyodide}
-def calc_rect_area(width, height):
-    area = width * height
-    return area
-
-result = calc_rect_area(2, 3)
-print("The area is:", result)
-
-a, b = 4, 2
-print("The second area is: ", calc_rect_area(a, b))
-```
-
-We use the return statement to return a value generated in the function to the caller. Again, like in the arguments passed to the function, the caller will receive a new reference to the value stored in memory that can assign to a new variable.
-return is used to move a result in memory between scopes.
-For instance, in the previous example there is a variable, inside the function, named area, but in the first call we store the reference in a variable named result. area and result are two variables, two references to the same value stored in memory, but they are variables that belong to different scopes.
-In this case area belongs to the scope of the calc_rect_area function and result to the global scope.
-
-## Argument and return types
-
-Python is a dynamic language, it does not require to defined the types of the arguments and return values, and, by default, does not enforce those types even when they are defined.
-The type annotations are meant as a way of documenting the code.
-
-There are [typing tools](https://typing.readthedocs.io/), like [mypy](https://mypy-lang.org/) that can be used to enforce them, but they are not part of the language proper.
-
-## The function interface
-
-Now that we have talked about how to define functions, and how to pass and get data from them we can deliniate what the function interface is.
-Remember, when thinking about a function, or any other form of modularizing the code, of dividing it in pieces, take into accounts two aspects:
-
-- the interface: how the function interacts with the rest of the program
-- the implementation: how the task is carried out
-
-For the structure of the program interfaces are more important than implementations, because if you change an implementation, for instance to speed it up or to fix a bug, the rest of the program will be unafected as long as you keep the interface.
-Think of the interface as a promise done to the rest of the program, as a contract that the function will honor. Thus, for the rest of the program, the implementation is just a detail, what matters is how to interact with that piece of the code.
-The program is a complex machine build with small, and hopefully understandable, lego pieces, and the interface is the shape of the piece.
-
-We could split the interface in two: the explicit or interface proper, and the implicit interface.
-
-The interface proper is comprised by:
-
-- the function name, and possible the namespace in which that name is found.
-- the arguments accepted by the function as well as its types
-- the returned values and its types
-
-The implicit interface is comprised by the interactions of the function with the rest of the program that are not explicitly declared like:
-
-- any modification state of the objects passed to the function that are not clearly stated and, thus, not expected by the user.
-- any modification to the mutable objects passed to the function not clearly estated
-- any modification of the global state, like changing the value of a global variable
-- any use of the global scope, like the reading of a global variable
-
-The interface proper is the stated contract that the function explicitely declares to follow and its at the base of the software modularity. While the implicit interface is, although it can be useful, and even completely necesary in some circunstances, is a modularity violation and a throw back to the spaghetti code, to an unmaintainable mess.
-
-### Name and namespace
-
-Of course, the function name is a critical part of the function interface, if we change it the rest of the code that uses that function will have to be changed.
-But also the namespace, where the function is located is important.
-For instance, in Python the [sqrt](https://docs.python.org/3/library/math.html#math.sqrt) function is located in the [math](https://docs.python.org/3/library/math.html) module of the standard library, so to use it we have to import it from there.
-
-```{pyodide}
-from math import sqrt
-
-print(sqrt(2))
-```
-
-If the Python developers were to change the location of the sqrt function, we would have to change our code accordingly. By the way, in the Python standard library there is a different [sqrt](https://docs.python.org/3/library/cmath.html#cmath.sqrt) function with a different interface, a function that return [complex](https://docs.python.org/3/library/functions.html#complex) numbers instead of [floats](https://docs.python.org/3/library/functions.html#float), and we differenciate between these two functions because they are imported from different namespaces, from different modules.
-
-### Arguments
-
-The arguments accepted by the function, as well as its types, are also part of the interface, if we were to change the arguments required or accepted we might change the rest of the code, the parts of the program that make calls to the modified function.
-
-### Value change
-
-We can pass data to a function if two different ways:
-
-- by copying it
-- using a reference or a pointer
-
-In the first case we copy the value. Imagine that we were passing a variable that holds the integer 2. We would pass that data to the function by creating a copy of that number in a different part of the memory and, thus, the variable inside the function would reference to a different 2 than the variable outside the function.
-
-In the second case both variables, the one inside the function and the ones outside, would end up referencing the same value, the same 2.
-In some languages, like C or Rust one can chose how to proceed, do we want to copy the data or to create a reference or a pointer to it and that is made explicit in the function interface.
-
-One of the Python objectives was to be simple, and that is why, maybe, his creator chose to avoid this complexty and to make all arguments passings to any function by reference. Moreover, in Python all variables are always references.
-For inmutable types this is not a problem at all because even if different variables hold references to the same object, none of them could change the value, but with mutable data types we have a problem. For instance, a function could change a list, that has been passed to it by a caller, by appending values to it without the caller awarenes.
-So, in Python mutable objects could be altered inside any function and that is part of the interface, but a part that could not be explicit.
+For inmutable types having several references to the same object is not a problem at all because even if different variables hold references to the same object, none of them could change its value, but with mutable data types we have a problem. For instance, a function could change a list, that has been passed to it by a caller, by appending values to it without the caller awarenes.
+So, in Python mutable objects could be altered inside any function and that is part of the interface, but an implicit part.
 
 Try to guess what will be the result of running the following code:
 
@@ -603,10 +774,8 @@ result = a + b
 print(result)
 print(result == 10)
 ```
-
 ::: { .solution exercise="get_ten" }
 ::: { .callout-tip collapse="false"}
-
 ```{pyodide}
 a = 6
 x = 4
@@ -616,15 +785,12 @@ result = a + x
 print(result)
 print(result == 10)
 ```
-
 :::
 :::
-
 
 With lists the behaviour seems different.
 
 ```{pyodide}
-
 a = ["hello", "Dirk"]
 b = a
 b[0] = b[0].upper()
@@ -773,25 +939,7 @@ flowchart TB
 
 This is an aspect that varies from language to language.
 If you study a different programming language you will need to understand if the variables are ment to be values, [pointers](https://en.wikipedia.org/wiki/Pointer_(computer_programming)) or references.
-In Python they are always references. You can read a Real Python tutorial about Python [references](https://realpython.com/python-pass-by-reference/).
-
-In Python every variable is a reference, and arguments to functions are thus passed by reference.
-When we pass a text string or a list to a function Python creates new references to these objects.
-We have to be careful because if you pass a mutable object to a function the function might changed it.
-
-```{pyodide}
-def sum_squares(numbers):
-    for i in range(len(numbers)):
-        numbers[i] = numbers[i]**2
-    return sum(numbers)
-
-my_numbers = [1, 2, 3]
-print(my_numbers)
-square_sum = sum_squares(my_numbers)
-print(f"{square_sum=}")
-# my_numbers have been changed, not cool
-print(my_numbers)
-```
+In Python they are always references. You can read a Real Python tutorial about how Python pass [by reference](https://realpython.com/python-pass-by-reference/).
 
 Changing inside the function a mutable object that have been passed to it without warning the function user is a common source of bugs and problems. This is not a good practice, try to avoid it!
 The previous code could be written to avoid this problem.
@@ -816,189 +964,10 @@ One way to make the change of the object inside the function, more or less, expl
 That is why lists methods like append, extend or sort do not return the list. The callers are made aware that they are not getting a new list and the original one is intact, no, the list that they sent to the function is changed.
 Well, in this case, these are not, strictly speaking, functions, but object methods, but they still could return a reference to the object. Their interface could be more similiar to the upper, lower or strip methods of the str class that do return a new str (in this case because the str objects are inmutable, so unlike the lists they can not be modified and so upper cannot modify the original object, but can only create a new one that has to be returned).
 
-### Side effects
-
-A more suttle part of the interface, one that is usually not explicit, is a change in the state of an object.
-This is known as a [side effect](https://en.wikipedia.org/wiki/Side_effect_(computer_science)), an effect other than reading the value of the function arguments and returning the intended result. 
-
-For instance, imagine that you are reading from a file and that you pass the file object to a function, that function could change the state of the object, for instance by consuming from the file or by closing it.
-
-```{pyodide}
-from io import StringIO
-
-text = """Far out in the uncharted backwaters of the unfashionable end of the western spiral arm of the Galaxy
-lies a small unregarded yellow sun. Orbiting this at a distance of roughly ninety-two million miles is
-an utterly insignificant little blue green planet whose ape-descended life forms are so amazingly primitive
-that they still think digital watches are a pretty neat idea.
-"""
-
-# no function call
-file = StringIO(text)
-print(len(list(file)))
-
-def consume_one_line(file):
-    next(file)
-
-# with a function call that changes the state of the file object
-# by consuming one line
-file = StringIO(text)
-consume_one_line(file)
-print(len(list(file)))
-
-def bad_actor_closes_file(file):
-    file.close()
-
-# with a function call that changes the state of the file object
-# by closing it
-file = StringIO(text)
-bad_actor_closes_file(file)
-print(len(list(file)))
-```
-
-After calling to the different functions the behaviour of the program will be quite different, so the change in the state of the file object is part of the function interface.
-It is always a good policy to informe to the caller/user of the function about these changes of state by making them explicit.
-
-Another kind of side effect to affect the global scope.
-This is highly discuraged, there is a global scope and many times it is reasonable to use it to read, for instance, inmutable configuration variables. But altering a variable in the global state takes us back to the path of unmaintanable spaghetti code.
-
-In Python the global scope is frequently used to store configuration constants. (By the way, if you follow the [PEP8](https://peps.python.org/pep-0008/) style guide, as you should, contants defined in the global scope are written with all capital letters.)
-
-```{pyodide}
-NUM_THREADS = 1
-
-def some_function_using_threads():
-    print(f"The number of threads is {NUM_THREADS}")
-```
-
-However, altering variables that belong to the global scope is discuraged and trying to do so can end up in unexpected behaviours.
-
-```{pyodide}
-NUM_THREADS = 1
-
-def some_function_using_threads():
-    NUM_THREADS = 2  # Python will create a new local scope variable,
-                     # this is not the variable as the global one
-    print(f"The number of threads is {NUM_THREADS}")
-
-some_function_using_threads()
-print(f"The global number of threads is still {NUM_THREADS}")
-```
-
-If you try to change a global inmutable variable you might get an error.
-
-```{pyodide}
-NUM_THREADS = 1
-
-def some_function_using_threads():
-    NUM_THREADS += 1  # This will fail
-                      # You are trying to set a new local variable named
-                      # NUM_THREADS, but this variable has not been initialized
-    print(f"The number of threads is {NUM_THREADS}")
-
-some_function_using_threads()
-```
-
-Python allows you to modify a global variable, but you have to explicitely ask for it by using the [global](https://docs.python.org/3/reference/simple_stmts.html#global) statement.
-
-```{pyodide}
-NUM_THREADS = 1
-
-def some_function_using_threads():
-    global NUM_THREADS
-    NUM_THREADS += 1
-    print(f"The number of threads is {NUM_THREADS}")
-
-some_function_using_threads()
-print(f"We have changed the global number of threads, now they are: {NUM_THREADS}")
-```
-
-However, in general, try not to abuse of the global scope. Functions were desing to modify only its scope and having side effects goes agaist the modularity achived by having functions in the first place.
-Altering global variables makes the progam less modular because although the change of these variable could be considered part of the interface of the function, it is not an explicit part, it is not declared as an argument or as a return. So, by modifying global variables we get code that is more spaghetti like, and that so the program will be less maintainable.
-
-The global statement is a nice remainder of the problem of altering the global state, but in Python we can alter the global state, the variables that belong to the global scope, without using the global statement.
-We can modify mutable objects referenced by variables that belong to the global scope.
-
-```{pyodide}
-CONFIG = {'num_threads': 1}
-
-def some_function_using_threads():
-    CONFIG['num_threads'] += 1
-    print(f"The number of threads is {CONFIG['num_threads']}")
-
-some_function_using_threads()
-print(f"We have changed the global number of threads, now they are: {CONFIG['num_threads']}")
-```
-
-If you think that you need to alter the global state, think twice, because, in general this is a very bad idea. If after thinking it carefully you still think you need to do it, think it again.
-There is another mechanism to store states between funcion calls that respects the modularity: create a class and instantiate an object. Objects are modular and they allow us to store states between calls. That is one of the big difference between the procedural and the object oriented approach.
-
-### Returned values
-
-It is also fairly obvious that the returned values and types are also part of the interface, if we change what we return we will have to alter the calls to the function.
-
-By the way, I think that it is not a very good practice to change the number or type of the values returned depending on the function call.
-Imagine that we did a function that returned either a float or a complex number depending on the input.
-
-```{pyodide}
-from math import sqrt as fsqrt
-from cmath import sqrt as csqrt
-
-def sqrt(number:float) -> float|complex:
-    try:
-        result = fsqrt(number)
-    except ValueError:
-        result = csqrt(number)
-    return result
-
-result = sqrt(2)
-if isinstance(result, float):
-    print("Here we need code to deal with floats")
-else:
-    print("Here we need code to deal with complex")
-```
-
-This is a well defined interface, but the caller will have to test what is getting from the function.
-
-A better solution would be to make the caller/user of the function to deal with the two options, as the standard library sqrts functions do.
-
-```{pyodide}
-from math import sqrt as fsqrt
-from cmath import sqrt as csqrt
-
-value = 10
-try:
-    result = fsqrt(value)
-except ValueError
-    result = csqrt(value)
-```
-
-Now the caller explicitly aware of the two possible types and will need to decide to deal the situation. Before the problem was not explicit and the unaware caller could have a program that worked in some ocasions and failed in some other times without being aware of the problem.
-
-We have the same problem when we choose to return None when the function fails to calculate the result.
-
-```{pyodide}
-from math import sqrt as sqrt
-
-def sqrt(number:float) -> float|None:
-    try:
-        result = sqrt(number)
-    except ValueError:
-        result = None
-    return result
-
-res = sqrt(1)
-if res is None:
-    print("Function failed to calculate")
-else:
-    print(f"We can go on with our calculations, there's a result value: {res}")
-```
-
-In this case it'd be better to just let the error be raised, like the standard library sqrt function does.
-In that way the caller we'll be aware that a problem happened only when the problem arises, and will have to deal the the error only when needs to, and not in every call in the [call stack](https://en.wikipedia.org/wiki/Call_stack).
-
 ## Testing and modularity
 
-Having isolated pieces of functionality and an interface defined for each piece makes possible that we test the complience of each piece to its interface. Is this piece honoring its interface/contract.
+Having isolated pieces of functionality and an interface defined for each piece makes possible that we test the complience of each piece to its interface. Is this piece honoring its interface/contract?
+
 In spaghetti code we could test if the overall complex functionality of the program is working, but if we have a modular code base testing becames much more useful because we can test that each piece works, and the task carried out by every small unit is simpler and thus finding and fixing bugs is easier. Moreover, if we decide to change the implementation of, for instance, one function, but the test is still working we can be confident, although not completely sure, that the rest of the program will sill work.
 
 Let's show how a test would work.
@@ -1011,4 +980,4 @@ def calc_rect_area(width, height):
 assert isclose(calc_react_area(2, 2), 4.0)
 ```
 
-Testing is a huge topic in of itself and we won't cover it here, but read something about [unit testing](https://en.wikipedia.org/wiki/Unit_testing). Be aware that in Python there is a module called [unittest](https://docs.python.org/3/library/unittest.html) in the standar library that helps with creating tests (more about the [unittest](https://realpython.com/python-unittest/) module in Real Python), but that there is another testing library: [pytest](https://docs.pytest.org/). pytest is not included in the standard library, but is more modern and much more capable that unittest, and it is also very popular. You can read about [pytest in Real Python](https://realpython.com/pytest-python-testing/) or in the [pytest book](https://pythontest.com/pytest-book/).
+Testing is a huge topic in and of itself and we won't cover it here, but read something about [unit testing](https://en.wikipedia.org/wiki/Unit_testing). Be aware that in Python there is a module called [unittest](https://docs.python.org/3/library/unittest.html) in the standard library that helps with creating tests (more about the [unittest](https://realpython.com/python-unittest/) module in Real Python), but that there is another testing library: [pytest](https://docs.pytest.org/). pytest is not included in the standard library, but is more modern and much more capable that unittest, and it is also very popular. You can read about [pytest in Real Python](https://realpython.com/pytest-python-testing/) or in the [pytest book](https://pythontest.com/pytest-book/).
