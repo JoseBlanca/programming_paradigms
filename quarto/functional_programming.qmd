@@ -412,6 +412,56 @@ print(odds_squared)
 Another very useful, and one of the most common, way of using the functional approach is to use [filter](https://docs.python.org/3/library/functions.html#filter), [map](https://docs.python.org/3/library/functions.html#map) and [reduce](https://docs.python.org/3/library/functools.html#functools.reduce).
 All these utilities are designed to work with iterators, with streams of data, and the [map/reduce](https://en.wikipedia.org/wiki/MapReduce) pattern was thought as a tool to process big quantities of data.
 
+
+```{mermaid}
+flowchart TB
+    subgraph filter
+        f["filter(is_square_funct, item_iterator)"]
+        subgraph filter_drawing
+            subgraph before_filter[" "]
+                1f[" "]
+                2f((" "))
+                3f((" "))
+                4f[" "]
+                5f[" "]
+            end
+            subgraph after_filter[" "]
+                1fa[" "]
+                4fa[" "]
+                5fa[" "]
+            end
+            before_filter ---> after_filter
+        end
+    end
+```
+
+```{mermaid}
+flowchart TB
+    subgraph map
+        m["map(to_square_funct, square_iterator)"]
+        subgraph map_drawing[" "]
+            1s[" "]
+            2s[" "]
+            3s[" "]
+            4s[" "]
+            5s[" "]
+
+            1c((" "))
+            2c((" "))
+            3c((" "))
+            4c((" "))
+            5c((" "))
+
+            1s ---> 1c
+            2s ---> 2c
+            3s ---> 3c
+            4s ---> 4c
+            5s ---> 5c
+        end
+    end
+```
+
+
 ```{pyodide}
 from functools import reduce
 numbers = range(10000)
