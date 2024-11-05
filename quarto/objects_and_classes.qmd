@@ -90,6 +90,36 @@ So, you could almost think of a class as syntactic sugar that bounds some functi
 The data structure that holds the specific data of each object, like rectangle1 and rectangle2, in the class methods is represented by *self*. That is why, in Python, every standard class method has as a first argument *self*, the argument that represents the data for a particular object.
 In some languages, like in the old good Perl, this association of the methods to the data structure to create a class is explicit. In Perl they use the bless statement. They bless the data stored in a data structure with the methods/functions located in what they call a package, that is a kind of Perl module.
 
+### Attributes: properties and methods
+
+Besides methods classes have properties, the data associated to the objects.
+In this case the properties are: width and height.
+So, we have methods (actions, behaviour) and properties (data).
+
+Finnaly, you will hear about attributes. In Python we talk about methods, properties and attributes. Attributes are the sum of the properties and methods, so all that is accessed with the dot notation: "object.attribute".
+In this regard you will also read about other terms like: [fields]. There is no consensus about the exact meaning of all these terms: attribute, field, property, and in different programming languages they tend to use them in sligtly different ways. But remember no matter the exact term used: classes have an interface comprised by data and behaviour.
+
+If you want to access the list of attributes of an object, you can use the [dir](https://docs.python.org/3/library/functions.html#dir) built-in function.
+
+```{pyodide}
+class Rectangle:
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+    
+    def calc_area(self):
+        return self.width * self.height
+
+    def print(self):
+        print(f"The rectangle has a width of {self.width}, a height of {self.height}, and an area of {self.calc_area()}.)
+
+rectangle = Rectangle(2, 3)
+print(dir(rectanble))
+```
+
+dir returns a big list of attributes because Python, under the hood, adds a lot of functionality to any object.
+Moreover, there are quite a lot of methods whose names start and ends with two under scores, like: __init__, __class__, or __name__. These are known as [special](https://docs.python.org/3/reference/datamodel.html#special-method-names) or [magic](https://realpython.com/python-magic-methods/) methods.
+
 ## Encapsulation
 
 ### Classes and modularity
@@ -111,6 +141,69 @@ With the right design Object Oriented Programs are easier to scale.
 
 You can create huge projects based on the procedural paradigm, but to have a highly modularized project, you have to be very disciplined when defining and changing the data structures.
 For instance, you could collect all functions that work with a particular data structure in the same place, like in a file, a Python module. In that way if the data structure would had to be changed, the functions that should be modifed would all be collected together. This kind of procedural approach would be a kind of limited encapsulaiton and would have some of the benefits of the Object Oriented paradigm.
+
+Let's see an example of how hidding the structure of the data helps with modularity.
+Imagine that we have implemented a Circle class.
+
+```{pyodide}
+from math import pi
+
+class Circle:
+    def __init__(x, y, radius):
+        self.x = x
+        self.y = y
+        self.radius = radius
+    
+    def calc_circunference():
+        return 2 * pi * self.radius
+
+    def calc_area(self):
+        return pi * self.radius ** 2
+
+circle = Circle(1, 1, 3)
+print(circle.calc_area())
+```
+
+Now we are asked to add a feature related to ellipses and to avoid extra code we realize that circles are just a special kind of ellipses and we decide to reimplement our Circle class in a completely different way.
+
+```{pyodide}
+class Ellipse:
+    def __init__(self, x, y, semi_major_axes, semi_minor_axes):
+        self.x = x
+        self.y = y
+        self.semi_major_axes = semi_major_axes
+        self.semi_minor_axes = semi_minor_axes
+
+    def calculate_circumference(self):
+        a = self.semi_major_axes
+        b = self.semi_minor_axes
+        h = (a - b) ** 2 / (a + b) ** 2
+        # This formula is an approximation
+        # https://en.wikipedia.org/wiki/Ellipse#Circumference
+        circumference = pi * (a + b) * (1 + 3 * h /(10 + sqrt(4 - 3 * h)))
+        return circumference
+
+    def calculate_area(self):
+        area = pi * self.semi_major_axes * self.semi_minor_axes
+        return area
+
+
+class Circle(Ellipse):
+    def __init__(self, x, y, radius):
+        super().__init__(x, y, radius, radius)
+
+    def calculate_circumference(self):
+        # This formula is exact, unlike the ellipse one
+        return 2 * pi * self.semi_major_axes
+
+
+circle = Circle(1, 1, 3)
+print(circle.calc_area())
+```
+
+We have implemented Circle as a subclass of Ellipse. This is called: object [inheritance](https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming)). But this is not the relevant part here.
+For the modularization the most important lines are the two last ones. The user of the Circle class has not change anything at all despite the complete reimplementation of the Circle class.
+This is what we mean by modularity. This code is modular, the programmers that build the Circle class and the ones that use it could be completely independent and the implementers could radically change their implementation, including the data structures that store the object data, without the users of that funcionality needing to change their code.
 
 ### Private and public attributes
 
