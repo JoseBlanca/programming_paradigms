@@ -1,0 +1,293 @@
+# Procedural and OOP excersises
+
+## DNA sequence: procedural
+
+### Procedural approach
+
+Create functions to:
+
+- calculate sequence length
+- get the fastq and fasta representations of a sequence
+- reverse and complement a sequence.
+
+The sequence should be a tuple with two (name, and sequence) or three (name, sequence, and quality) fields.
+
+Here you have a test suite that should pass once you have implemented the functionality:
+
+```{python}
+class SequenceTest(unittest.TestCase):
+    def test_seq_len(self):
+        seq = ("seq1", "ATGC")
+        assert calc_len(seq) == 4
+
+        seq = ("seq2", "ATGC", [10, 20, 30, 40])
+        assert calc_len(seq) == 4
+
+        seq = ("seq2", "ATGC", [10, 20, 30])
+        try:
+            assert calc_len(seq) == 4
+            self.fail("Should have raised a ValueError")
+        except ValueError:
+            pass
+
+    def test_to_fastq(self):
+        seq = ("seq1", "ATGC")
+        try:
+            assert to_fastq(seq)
+            self.fail("Should have raised a RuntimeError")
+        except RuntimeError:
+            pass
+
+        seq = ("seq2", "ATGC", [10, 20, 30, 40])
+        assert to_fastq(seq) == "@seq2\nATGC\n+\n+5?I\n"
+
+    def test_to_fasta(self):
+        seq = ("seq1", "ATGC")
+        assert to_fasta(seq) == ">seq1\nATGC\n"
+        seq = ("seq2", "ATGC", [10, 20, 30, 40])
+        assert to_fasta(seq) == ">seq2\nATGC\n"
+
+    def test_reverse(self):
+        seq = ("seq1", "aTGC")
+        seq = reverse(seq)
+        assert seq[0] == "seq1_rev"
+        assert seq[1] == "GCAt"
+
+        seq = ("seq2", "ATGC", [10, 20, 30, 40])
+        seq = reverse(seq)
+        assert seq[1] == "GCAT"
+        assert seq[2] == [40, 30, 20, 10]
+
+
+if __name__ == "__main__":
+    unittest.main()
+```
+
+
+### Object oriented approach
+
+Create a Sequence class with the following properties:
+
+- name
+- sequence
+- quality, this should be an array of integers from 0 to 60. Quality should be optional, it could be None.
+
+The class should have the methods to calculate:
+
+- the length of the sequence
+- to create a reverse and complementary sequence
+- to_fastq: it returns a str with the fastq representation of the sequence
+- to_fasta: it returns a str with the fasta representation of the sequence
+
+Here you have a test suite that should pass once you have implemented the functionality:
+
+```{python}
+class SequenceTest(unittest.TestCase):
+    def test_seq_creation(self):
+        seq = Seq("seq1", "ATGC")
+        assert seq.name == "seq1"
+        assert seq.seq == "ATGC"
+        assert seq.qual is None
+
+        seq = Seq("seq2", "ATGC", [10, 20, 30, 40])
+        assert seq.name == "seq2"
+        assert seq.seq == "ATGC"
+        assert seq.qual == [10, 20, 30, 40]
+
+        try:
+            Seq("seq3", "ATGC", [10, 20, 30])
+            self.failed("Should have raised a ValueError")
+        except ValueError:
+            pass
+        try:
+            Seq("ATGC")
+            self.failed("Should have raised a TypeError")
+        except TypeError:
+            pass
+
+    def test_seq_len(self):
+        seq = Seq("seq1", "ATGC")
+        assert len(seq) == 4
+
+        seq = Seq("seq2", "ATGC", [10, 20, 30, 40])
+        assert len(seq) == 4
+
+    def test_to_fastq(self):
+        seq = Seq("seq1", "ATGC")
+        try:
+            assert seq.to_fastq()
+            self.fail("Should have raised a RuntimeError")
+        except RuntimeError:
+            pass
+
+        seq = Seq("seq2", "ATGC", [10, 20, 30, 40])
+        assert seq.to_fastq() == "@seq2\nATGC\n+\n+5?I\n"
+
+    def test_to_fasta(self):
+        seq = Seq("seq1", "ATGC")
+        assert seq.to_fasta() == ">seq1\nATGC\n"
+        seq = Seq("seq2", "ATGC", [10, 20, 30, 40])
+        assert seq.to_fasta() == ">seq2\nATGC\n"
+
+    def test_reverse(self):
+        seq = Seq("seq1", "aTGC")
+        seq = seq.reverse()
+        assert seq.name == "seq1_rev"
+        assert seq.seq == "GCAt"
+
+        seq = Seq("seq2", "ATGC", [10, 20, 30, 40])
+        seq = seq.reverse()
+        assert seq.seq == "GCAT"
+        assert seq.qual == [40, 30, 20, 10]
+
+
+if __name__ == "__main__":
+    unittest.main()
+```
+
+### Hints
+
+You can use the following dictionary to complement the IUPAC nucleotides:
+
+```{python}
+COMPLEMENT_NUCL = {
+    "A": "T",
+    "T": "A",
+    "C": "G",
+    "G": "C",
+    "N": "N",
+    "Y": "R",
+    "R": "Y",
+    "S": "S",
+    "W": "W",
+    "K": "M",
+    "M": "K",
+    "B": "V",
+    "V": "B",
+    "D": "H",
+    "H": "D",
+}
+```
+
+### Solutions
+
+You can get a working solution for the [OOP](files/sequence_oop.py) and [procedural](files/sequence_proc.py) approaches.
+
+# Functional programming excersises
+
+## Fastq statistics
+
+Write a program capable of calculating statistics of a fastq file.
+The statistics to calculate should be:
+
+- number of sequences
+- sequence length distribution
+- mean quality per sequence distribution
+- %GC per sequence distribution
+
+Take into account that the fastq files are usually very big, so write the program using a generator to read the sequences.
+
+The program should be able to read:
+
+- both [gzipped](https://en.wikipedia.org/wiki/Gzip) and umcompressed fastq files.
+- from [stdin](https://en.wikipedia.org/wiki/Standard_streams#Standard_input_(stdin)) and standard files
+
+The result should be written in a [json](https://en.wikipedia.org/wiki/JSON) file.
+You can download an example fastq file in [here](files/seqs.fastq.gz).
+
+### Hints
+
+It is faster to read the file in binary mode than in text mode.
+
+```{python}
+    if fpath == "-":
+        fastq_fhand = sys.stdin.buffer
+    else:
+        fpath = Path(fpath)
+        if not fpath.exists():
+            print(f"File {fpath} does not exist")
+            sys.exit(1)
+        fastq_fhand = open(fpath, "rb")
+    fastq_fhand = io.BufferedReader(fastq_fhand)
+```
+
+To know if a file is gzipped check its first two bytes, the [magic number](https://en.wikipedia.org/wiki/Magic_number_(programming)) of a gzipped file is: 
+
+```{python}
+gzip_magic_number = b"\x1f\x8b"
+```
+
+You can peek (read without advancing the pointer of the file) if you wrap the file handler in a [io.BufferedReader](https://docs.python.org/3/library/io.html#io.BufferedReader).
+
+```{python}
+if not isinstance(fhand, io.BufferedReader):
+    fhand = io.BufferedReader(fhand)
+two_bytes = fastq_fhand.peek(2)[:2]
+```
+
+To open gzipped files use the gzip module.
+
+```{python}
+fhand = gzip.open(fhand, "rb")
+```
+
+Python has a module in the standar library to read and write [json](https://docs.python.org/3/library/json.html) files.
+
+### Test suite
+
+```{python}
+class TestFastqStats(unittest.TestCase):
+    def test_calc_fastq_stats(self):
+        fastq = b"@seq1\nATGC\n+\nIIII\n"
+        fastq_fhand = io.BytesIO(fastq)
+        out_stats_fhand = io.StringIO()
+        calc_fastq_stats(fastq_fhand, out_stats_fhand)
+        out_stats = json.loads(out_stats_fhand.getvalue())
+        self.assertEqual(out_stats["num_seqs"], 1)
+        self.assertEqual(out_stats["seq_len_distrib"], {"4": 1})
+        self.assertEqual(out_stats["gc_distrib"], {"50": 1})
+        self.assertEqual(out_stats["mean_qual_distrib"], {"40": 1})
+```
+
+### Solution
+
+If you want, you could take a peak of a possible [solution](files/calc_fastq_stats.py) that uses a generator to read the sequences.
+
+## Count Kmers
+
+Write a program that, given a fastq file, counts the [kmers](https://en.wikipedia.org/wiki/K-mer) found in the DNA sequences.
+
+It should write down two files:
+
+- A json file with the kmer abundance distribution.
+- A text file with every kmers
+
+The text file should include every kmer with a count higher than 1.
+In each line there should be the kmer sequence and the number of times that the kmer has been found in the sequences.
+The kmer distribution abundance refers to the number of kmers that have been found 1, 2, 3 o n number of times.
+For instance, 3 kmers have been found to be present 42 times in the sequences, 30 kmers 5 times, etc.
+Here you have a test with the expected output:
+
+```{python}
+class TestKmerCounting(unittest.TestCase):
+    def test_kmer_counting(self):
+        fhand = io.BytesIO(
+            b"@seq1\nACTGGATCTTGCC\n+\nIIIIIIIIIII\n@seq2\nACTGGATATGCG\n+\nIIIIIIIIIIII\n@seq3\nTTCATGC\n+\nIIIIIII\n"
+        )
+        kmers_fhand = io.StringIO()
+        stats_fhand = io.StringIO()
+        count_kmers(fhand, kmers_fhand, stats_fhand, 5)
+        assert kmers_fhand.getvalue() == "ACTGG\t2\nCTGGA\t2\nTGGAT\t2\n"
+
+        assert json.loads(stats_fhand.getvalue()) == {"2": 3, "1": 14}
+```
+
+You can download a gzipped [fastq file](files/seqs.fastq.gz) with 1000 sequences.
+
+### Hints
+
+Parse the fastq file creating a generator, otherwise you would fill out your computer memory when reading millions of sequences.
+
+You can use a [Counter](https://docs.python.org/3/library/collections.html#collections.Counter) object to count the kmers.
+
+Remember the hints given in the calculate fastq statistics regarding opening gzipped and not compressed fastq files.
