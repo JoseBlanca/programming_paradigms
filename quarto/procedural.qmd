@@ -35,6 +35,40 @@ Programmers thought about how to create these subtasks, these small pieces of fu
 By the way, functions are also known as procedures, subroutines and many other, more or less, synonymous terms, but we are just going to use the term function.
 They are the key tool used to structure the code, they are the fundamental building block in all the main programming paradimgs: Procedural, Object Oriented and Functional Programming.
 
+Spaghetti approach:
+
+```{pyodide}
+width = 5
+height = 3
+area = width * height
+print(f"Area = {area}")
+
+width = 10
+height = 4
+area = width * height
+print(f"Area = {area}")
+```
+
+Procedural approach:
+
+```{pyodide}
+def calc_rectangle_area(width, height):
+    return width * height
+
+def print_area(area):
+    print(f"Area = {area}")
+
+width = 5
+height = 3
+area = calc_rectangle_area(width, height)
+print_area(area)
+
+width = 10
+height = 4
+print_area(calc_rectangle_area(width, height))
+```
+
+
 ### Functions are isolated blocks of code
 
 A function is a named section of a program, a block of code, a sequence of instructions grouped under a single name, that performs a specific task and that can be invoked, called, by other parts of the program to carry out that task.

@@ -9,11 +9,13 @@ format:
 Another way in which we can approach the structure of a program is [Functional Programming](https://en.wikipedia.org/wiki/Functional_programming).
 
 One could be tempted to think that Functional Programming is the paradimg that uses functions, but that would be a mistake. As we have already seen, functions are the key concept in the Procedural approach and functions, althought they are called methods, are a key component of the classes used in the Object Oriented approach. It is called Functional Programming, because in this approach functions are used in new ways, they can, for instance, be arguments passed to other functions.
+In functional programming we avoid changing state. In practical terms, this means functions can be passed around like data, and we minimize the use of variables that get updated.
 
 Functional Programming is normaly explanied in very theoretical terms.
 This kind of theoretical explanation might have its uses, but you won't find it here.
 In my day to day work I use functional programming concepts all the time, but always motivated by a practical need.
 This functional approach is especially useful when dealing with big data sets, and that it why I use it.
+For instance, in bioinformatics, you might have to process millions of sequence reads. Using iterators and generators (a functional style) means you don’t need to load all data at once – you can process one record at a time, which is memory-efficient.
 
 Let's do an example.
 Imagine that we want to sum all the numbers from 1 to 9.

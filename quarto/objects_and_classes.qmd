@@ -113,6 +113,15 @@ print(rectangle2)
 
 These kind of methods, that start and end with two underscores, in Python are called [magic methods](https://realpython.com/python-magic-methods/).
 
+Fix the following code, remember that objects should have a way to access their own data.
+
+```{pyodide}
+class Person:
+    def set_name(name):  # missing self
+        self.name = name
+p = Person()
+```
+
 ### Attributes: properties and methods
 
 Finnaly, you will hear about attributes. In Python we talk about methods, properties and attributes. Attributes are the sum of the properties and methods, so all that is accessed with the dot notation: "object.attribute".
@@ -424,3 +433,10 @@ If you are interested in these ideas I recommend to you the Real Python tutorial
 Python, as we have seen, allows us to write procedural and object oriented code.
 You can chose different approaches to solve different problems and you can combine them.
 That forces you to decide what to do in each occasion and there are no strict rules to follow, you will develop your style by reading and writing code.
+
+## Basic glossary
+
+- Class: A blueprint for objects that defines a type of thing (e.g., Rectangle).
+- Object (Instance): A concrete realization of a class with specific data (e.g., rectangle1 with width 4 and height 5).
+- Method: A function defined inside a class that operates on its data (e.g., Rectangle.calc_area).
+- Attribute: A property or method bound to an object, accessed with dot notation (e.g., rectangle1.width or rectangle1.calc_area()).
