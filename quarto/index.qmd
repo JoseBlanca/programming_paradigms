@@ -7,15 +7,15 @@ format: live-html
 
 These notes are meant to reflect about how to organize the code, specially about how and when to structure the code in a [procedural](https://en.wikipedia.org/wiki/Procedural_programming), [object oriented](https://en.wikipedia.org/wiki/Object-oriented_programming) or [functional](https://en.wikipedia.org/wiki/Functional_programming) way.
 This is not a course on how to structure your code, but just an introduction to the ideas to have in mind when thinking about which approach to use to structure your code.
-I think that structuring the code is an art, a craft, that can only be adquired through practice and experience, especially with the experience of working with other good programmers, and it is a skill that is never completely mastered, but let's hope that thinking about the motivations and tools involved one could develop this craft faster, and moreover, that one would learn about the importance of writting nicely structured code instead of an unmaintainalbe mess.
+I think that structuring the code is an art, a craft, that can only be adquired through practice and experience, especially with the experience of working with other good programmers, and it is a skill that is never completely mastered, but let's hope that thinking about the motivations and tools involved one could develop this craft faster, and moreover, that one would learn about the importance of writing nicely structured code instead of an unmaintainalbe mess.
 
-It is a common mistake, specially among beginers, to think that our aim when we write computer code is to create fast and memory efficient, very performant, programs.
+It is a common mistake, specially among beginners, to think that our aim when we write computer code is to create fast and memory efficient, very performant, programs.
 Of course we'd like our programs to run faster, but that's not our only, or main, goal, otherwise every program would be writen in assembly, a language capable of squeezing out every bit of computing power out of our machines. However, [few programmers](https://survey.stackoverflow.co/2024/technology/#most-popular-technologies) write in assembly.
 
 When one starts to code spends a lot of time thinking about how to implement the algorithms required to accomplish the task at hand, but as you gain experience in your programming carreer you focus your attention more and more in the structure of your code.
 Unstructured, spaghetti, code, could still be the option if you just need a 20 line script to solve a specific task, but for anything more complex than that you will realize that you need to think on the structure.
 
-Performance is important, but programmers also have other aims like writting:
+Performance is important, but programmers also have other aims like writing:
 
 - a working product before the universe ends, and, even better, before their managers and clients run out of patience.
 - realiable code that can be trusted.

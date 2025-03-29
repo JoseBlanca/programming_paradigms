@@ -423,4 +423,4 @@ If you are interested in these ideas I recommend to you the Real Python tutorial
 
 Python, as we have seen, allows us to write procedural and object oriented code.
 You can chose different approaches to solve different problems and you can combine them.
-That forces you to decide what to do in each occasion and there are no strict rules to follow, you will develop your style by reading and writting code.
+That forces you to decide what to do in each occasion and there are no strict rules to follow, you will develop your style by reading and writing code.

@@ -257,7 +257,7 @@ Although once you get used to them that won't be a problem for many algorithms, 
 
 If you plant to use iterators at all you should take a look at the [itertools](https://docs.python.org/3/library/itertools.html#itertools.islice) module, and if you want more functionality, you could check out the [more-itertools](https://github.com/more-itertools/more-itertools) package.
 
-## Pure and inmutable
+## Pure and immutable
 
 ### Pure functions
 
@@ -269,16 +269,16 @@ A [pure function](https://en.wikipedia.org/wiki/Pure_function) is a function tha
 Pure functions have some advantages over functions that, for instance, have side effects, that change an external state.
 As we discussed in the procedural approach, side effects destroy modularity and make code more difficult to reason about and maintain.
 
-### Inmutable objects
+### immutable objects
 
 Changing the state of the objects passed to the function breaks modularity.
 So, programming is much easier, for instance code is easier to debug, when we don't mutate the state of the objects passed to the function.
 
-It is nice to have functions that do not change the objects that we lend to them, but the caller does not allways have control over the function implementation and one way to enforce this is to pass to the function only inmutable objects.
+It is nice to have functions that do not change the objects that we lend to them, but the caller does not allways have control over the function implementation and one way to enforce this is to pass to the function only immutable objects.
 
 ## Cache and paralellization
 
-When using pure functions and inmutable objects we can apply very easyly, tricks to improve the performance of our code.
+When using pure functions and immutable objects we can apply very easyly, tricks to improve the performance of our code.
 
 We could, for instance, cache the result of time consuming computations. Since the function given the same arguments always returns the same values and the arguments are not changed, we can return a precomputed instance of the result.
 
@@ -302,7 +302,7 @@ print(sum_numbers(2, 2))
 
 Of course, lru_cache will not behave propertly with non-pure functions or with mutable arguments.
 
-Pure functions and inmutable objects are also very convenient when dealing with large amounts of processing because it is much more easier to paralelize programs built with them.
+Pure functions and immutable objects are also very convenient when dealing with large amounts of processing because it is much more easier to paralelize programs built with them.
 
 ## Functions are first class citizens
 
@@ -471,7 +471,7 @@ odds_squared = map(lambda number: number**2, odd_numbers)
 sum_adds_squared = reduce(lambda x, y: x + y, odds_squared)
 ```
 
-This is a somewhat convoluted way of writting the following algorithm:
+This is a somewhat convoluted way of writing the following algorithm:
 
 ```{pyodide}
 accummulated_sum = 0
@@ -483,7 +483,7 @@ print(accmulated_sum)
 
 The map-reduce approach splits the iteration functionality into the map and reduce functions, we have transformed the for, a loop statement, into a series of functions.
 
-This approach offers the possibility of doing the computations in parallel because each call to map and reduce is independent, as long as we are using pure functions (no side effects), and the functions do not modify the objects passed to them (something that we could enforce using inmutable objects).
+This approach offers the possibility of doing the computations in parallel because each call to map and reduce is independent, as long as we are using pure functions (no side effects), and the functions do not modify the objects passed to them (something that we could enforce using immutable objects).
 
 Python, for instance, has a multiprocessing [map](https://docs.python.org/3/library/multiprocessing.html#multiprocessing.pool.Pool.map) that allow us to apply map in parallel.
 
