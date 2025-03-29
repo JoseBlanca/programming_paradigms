@@ -501,3 +501,67 @@ sum_adds_squared = reduce(lambda x, y: x + y, odds_squared)
 
 If we can transform the computation that we are interested in carrying out into a series of pure functions, we can use this trick to do massive, and time and and memory efficient, computations in parallel.
 This is one of the main practial uses of the functional approach.
+
+## Filter sequences
+
+We have a list of DNA sequences and we want to filter out the ones that have Ns in them.
+We also want to calculate the length of the sequences that remain, the average length and the total length.
+We could do it like this:
+
+```{pyodide}
+sequences = ["ATGCT", "NNCGTAG", "GATTACA", "TAGN", 'ACTG', 'AAAAAAAA']
+
+valid_sequences = []
+lengths = []
+for seq in sequences:
+    if 'n' in seq.lower():
+        continue
+    valid_sequences.append(seq)
+    lengths.append(len(seq))
+
+print('Total length: ', sum(lengths))
+print('Average length: ', sum(lengths) / len(lengths))
+```
+
+Now substitute the for loop with list comprenhensions.
+
+```{pyodide}
+sequences = ["ATGCT", "NNCGTAG", "GATTACA", "TAGN", 'ACTG', 'AAAAAAAA']
+
+valid_sequences = [seq for seq in sequences if 'n' not in seq.lower()]
+lengths = [len(seq) for seq in valid_sequences]
+
+print('Total length: ', sum(lengths))
+print('Average length: ', sum(lengths) / len(lengths))
+```
+
+Finnaly, do it using filter, map, without using for loops or list comprenhensions.
+
+```{pyodide}
+sequences = ["ATGCT", "NNCGTAG", "GATTACA", "TAGN", 'ACTG', 'AAAAAAAA']
+
+valid_sequences = filter(lambda seq: 'n' not in seq.lower(), sequences)
+lengths = map(len, valid_sequences)
+
+print('Total length: ', sum(lengths))
+print('Average length: ', sum(lengths) / len(lengths))
+```
+
+The above code does not work as expected. What's the problem with it? Could you fix it?
+
+Now do it without even having to create a list with all the valid sequences in memory, without using a list or a list comprenhension.
+
+```{pyodide}
+def accumulate_len(total_len, num_seqs, seq):
+    return total_len + len(seq), num_seqs + 1
+
+sequences = ["ATGCT", "NNCGTAG", "GATTACA", "TAGN", 'ACTG', 'AAAAAAAA']
+valid_sequences = filter(lambda seq: 'n' not in seq.lower(), sequences)
+
+total_len, num_seqs = 0, 0
+for seq in valid_sequences:
+    total_len, num_seqs = accumulate_len(total_len, num_seqs, seq)
+
+print('Total length: ', total_len)
+print('Average length: ', total_len / num_seqs)
+```
