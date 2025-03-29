@@ -502,6 +502,33 @@ sum_adds_squared = reduce(lambda x, y: x + y, odds_squared)
 If we can transform the computation that we are interested in carrying out into a series of pure functions, we can use this trick to do massive, and time and and memory efficient, computations in parallel.
 This is one of the main practial uses of the functional approach.
 
+## Generators use much less memory
+
+Let's try to add all the squares up to a number using a list comprenhension while calculating the time it takes and the memory it uses. Run the code several times to get a better estimate of the time.
+
+```{pyodide}
+import time, sys
+N = 100000000
+start = time.time()
+nums_list = [i**2 for i in range(N)]
+total1 = sum(nums_list)
+end = time.time()
+print("List comp time:", end-start, "secs; size:", sys.getsizeof(nums_list))
+```
+
+Now, let's solve the same problem using a [generator expression](https://docs.python.org/3/reference/expressions.html#generator-expressions).
+
+```{pyodide}
+import time, sys
+N = 100000000
+start = time.time()
+nums_list = (i**2 for i in range(N))
+total1 = sum(nums_list)
+end = time.time()
+print("List comp time:", end-start, "secs; size:", sys.getsizeof(nums_list))
+```
+
+
 ## Filter sequences
 
 We have a list of DNA sequences and we want to filter out the ones that have Ns in them.
