@@ -18,3 +18,5 @@ website:
         href: "objects_and_classes.qmd"
       - text: "Functional programming"
         href: "functional_programming.qmd"
+      - text: "Exercises"
+        href: "exercises.qmd"

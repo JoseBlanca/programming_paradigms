@@ -14,7 +14,9 @@ The sequence should be a tuple with two (name, and sequence) or three (name, seq
 
 Here you have a test suite that should pass once you have implemented the functionality:
 
-```{python}
+```{{python}}
+import unittest
+
 class SequenceTest(unittest.TestCase):
     def test_seq_len(self):
         seq = ("seq1", "ATGC")
@@ -81,7 +83,9 @@ The class should have the methods to calculate:
 
 Here you have a test suite that should pass once you have implemented the functionality:
 
-```{python}
+```{{python}}
+import unittest
+
 class SequenceTest(unittest.TestCase):
     def test_seq_creation(self):
         seq = Seq("seq1", "ATGC")
@@ -149,7 +153,7 @@ if __name__ == "__main__":
 
 You can use the following dictionary to complement the IUPAC nucleotides:
 
-```{python}
+```{{python}}
 COMPLEMENT_NUCL = {
     "A": "T",
     "T": "A",
@@ -199,7 +203,7 @@ You can download an example fastq file in [here](files/seqs.fastq.gz).
 
 It is faster to read the file in binary mode than in text mode.
 
-```{python}
+```{{python}}
     if fpath == "-":
         fastq_fhand = sys.stdin.buffer
     else:
@@ -213,13 +217,13 @@ It is faster to read the file in binary mode than in text mode.
 
 To know if a file is gzipped check its first two bytes, the [magic number](https://en.wikipedia.org/wiki/Magic_number_(programming)) of a gzipped file is: 
 
-```{python}
+```{{python}}
 gzip_magic_number = b"\x1f\x8b"
 ```
 
 You can peek (read without advancing the pointer of the file) if you wrap the file handler in a [io.BufferedReader](https://docs.python.org/3/library/io.html#io.BufferedReader).
 
-```{python}
+```{{python}}
 if not isinstance(fhand, io.BufferedReader):
     fhand = io.BufferedReader(fhand)
 two_bytes = fastq_fhand.peek(2)[:2]
@@ -227,7 +231,7 @@ two_bytes = fastq_fhand.peek(2)[:2]
 
 To open gzipped files use the gzip module.
 
-```{python}
+```{{python}}
 fhand = gzip.open(fhand, "rb")
 ```
 
@@ -235,7 +239,9 @@ Python has a module in the standar library to read and write [json](https://docs
 
 ### Test suite
 
-```{python}
+```{{python}}
+import unittest
+
 class TestFastqStats(unittest.TestCase):
     def test_calc_fastq_stats(self):
         fastq = b"@seq1\nATGC\n+\nIIII\n"
@@ -268,7 +274,9 @@ The kmer distribution abundance refers to the number of kmers that have been fou
 For instance, 3 kmers have been found to be present 42 times in the sequences, 30 kmers 5 times, etc.
 Here you have a test with the expected output:
 
-```{python}
+```{{python}}
+import unittest
+
 class TestKmerCounting(unittest.TestCase):
     def test_kmer_counting(self):
         fhand = io.BytesIO(
