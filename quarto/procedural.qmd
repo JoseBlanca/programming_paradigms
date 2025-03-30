@@ -8,25 +8,25 @@ format:
 
 ## It all started with the spaghetti
 
-At the begining, when computers were simple, when programs were very small and performed just one task programmers didn't need to worry about dividing the code in modules/parts/sections that dealt with different tasks.
+At the begining, when computers were simple, when **programs were very small** and performed just one task programmers didn't need to worry about dividing the code in modules/parts/sections that dealt with different tasks.
 However, very soon computers became more powerful, programs grew and code became unwieldy and the [spaghetti code](https://en.wikipedia.org/wiki/Spaghetti_code) was born.
-Programmers thought about how to solve the issue, on how to unravel the spaghetti, and they came with the idea that they had to divide the code into small subtasks. This allows for:
+Programmers thought about how to solve the issue, on how to unravel the spaghetti, and they came with the idea that they had to **divide** the code **into** small **subtasks**. This allows for:
 
-- The reuse of these small pieces of functionality.
-- The division of labor in teams of programmers in which different people can implement and maintain different parts of the code.
-- The testing of the functionality of every piece of code. If every module has a well defined task to do, we can test if that code is doing what is supposed to be doing.
+- The **reuse** of these small pieces of functionality.
+- The **testing** of the functionality of every piece of code. If every module has a well defined task to do, we can test if that code is doing what is supposed to be doing.
+- The division of labor in **teams** of programmers in which different people can implement and maintain different parts of the code.
 
 ![Spaghetti vs structured](images/spaghetti_vs_structured.jpg)
 
-If you are writing a small script that performs a just one very well defined and small task, it might be OK not to structure your code. But for anything else, thinking about the structure is one of the most important programming tasks; and the main question to answer is: how do I divide this code into pieces that:
+If you are writing a small script that performs a just one very well defined and small task, it might be OK not to structure your code. But for anything else, thinking about the **structure** is one of the most important programming tasks; and the main question to answer is: **how do I divide this code into pieces that**:
 
-- perform only one task
-- have access only to the data that they require to complete the task
-- have a well defined interface
+- **perform** only **one task**
+- have access only to the **data that they require** to complete the task
+- have a well defined **interface**
 
-Of course, not all programmers are experienced and disciplined and lots of code is unstructured, an entangle mess. Spaghetti code might work, but it is unmaintainable: bugs are difficult to fix, features impossible to add, and new programmers unfamiliar with the code will have a hard time working with it.
+Of course, not all programmers are experienced and disciplined and lots of code is unstructured, an entangle mess. **Spaghetti code** might work, but it is **unmaintainable**: **bugs** are difficult to fix, **features** impossible to add, and new programmers unfamiliar with the code will have a hard time working with it.
 
-Fortunately programmers are resourceful, and very soon they realized that the key to maintainable code was to divide it in small pieces that performed a well defined task and that communicated with the rest of the program only through its declared interface.
+Fortunately programmers are resourceful, and very soon they realized that the key to maintainable code was to divide it in small **pieces** that performed a well defined task and that communicated with the rest of the program only through its **declared interface**.
 Different [programming paradigms](https://en.wikipedia.org/wiki/Programming_paradigm) have been proprosed to help structuring the code, like [Object Oriented Programming](https://en.wikipedia.org/wiki/Object-oriented_programming) (OOP) or [Functional Programming](https://en.wikipedia.org/wiki/Functional_programming), but the most basic one, and a very used one, is [Procedural Programing](https://en.wikipedia.org/wiki/Procedural_programming).
 
 ## Functions to disentangle the spaghetti
@@ -83,7 +83,7 @@ def print_hello():
 print_hello()
 ```
 
-A function is a somewhat isolated block of code, a box with some inputs and some outputs.
+A function is a **somewhat isolated block** of code, a box with some **inputs** and some **outputs**.
 They are somewhat similar to a mathematical function, they might take some inputs, that could be numbers of any other kind of data, they do some calculations, some transformations, and they might return a result.
 
 ```{pyodide}
@@ -119,18 +119,18 @@ flowchart LR
 
 The function:
 
-- might take some data into the function
-- performs an action
-- might return some data out of the function
+- might **take** some **data** into the function
+- performs an **action**
+- might **return** some **data** out of the function
 
 It is useful to think about the function as an action carried out on some data.
-Usually the data is a thing, like a cicle, and the function is an action performed on that thing, like calculting an area. Take that into account when naming the functions, they are actions and they take data related to things, nouns.
+Usually the **data is a thing**, like a cicle, and the function is an action performed on that thing, like calculting an area. Take that into account when naming the functions, they are actions and they take data related to things, nouns.
 A function name like "calc_circle_area()" reflects the action, a name like "circle_area()" does not.
 
 The function can be divided in:
 
-- an interface: the part of the function that interacts, interfaces, with the rest of the program
-- an implementation: the details about how the action is carried out
+- an **interface**: the part of the function that interacts, interfaces, with the rest of the program
+- an **implementation**: the details about how the action is carried out
 
 A function can be thought as as a lego piece that has a defined shape and that we could use in our projects every time that we need that particular shape.
 
@@ -138,7 +138,7 @@ A function can be thought as as a lego piece that has a defined shape and that w
 
 The interface of the function is its shape, everytime that we need to perform an action on a piece of data we can use that function, that block of code, in the same way.
 
-When thinking about the program structure, it is useful to fix our attention of the interfaces of the different parts of the program, on the shapes of the different blocks, because that is how the whole program will fit together, through its interfaces. The implementation of each part could be regarded almost as a detail.
+When thinking about the program structure, it is useful to **fix** our **attention** on the **interfaces** of the different parts of the program, on the shapes of the different blocks, because that is how the whole program will fit together, through its interfaces. The **implementation** of each part could be regarded almost as a **detail**.
 For instance, we could change the implementation the previous function without changing its interface.
 
 ```{pyodide}
@@ -154,18 +154,18 @@ def calc_circle_area(radius):
 circle_area = calc_circle_area(3)
 ```
 
-An interface is a kind of contract, we are committing ourselves to providing a functionality that will be served by that particular interface, and as long as the caller continues using the same interface the function will continue honoring the contract, providing its functionality.
+An interface is a kind of **contract**, we are committing ourselves to providing a functionality that will be served by that particular interface, and as long as the caller continues using the same interface the function will continue honoring the contract, providing its functionality.
 
 ### The advantages of modularity
 
-This is one of the big advantages of the procedural programming, we can divide the program into smaller, and somewhat independent pieces of code, because we have limited the interaction between different parts of the program to their interfaces.
+This is one of the big advantages of the procedural programming, we can divide the program into smaller, and somewhat independent pieces of code, because we have **limited the interaction** between different parts of the program to their interfaces.
 We have turned a big piece of code into a collection of small interacting modules, a plate of spaghetti into a lego construction.
 This modularity is key and it helps with:
 
-- Understanding the code: it is easier to understand little pieces that have well defined responsibilities than a huge blocks of code. It is easier to understand how a lego construction works than a plate of spaghetti. New programers, or even programmers already familiar with the code, will have a better time, a lower cognitive load, and will need less time understanding what the program is doing and how is doing it.
-- Bug fixing: it is much easier to locate which part of the code is responsible for a particular bug, like the calculus of the circle area if the functionality of the program is divided into small pieces. If an error occurs in a program organized with functions, a developer can locate and correct the error more quickly than in a poorly organized code.
-- Testing: it is possible to check if a block of code is honoring its interface, because it now has an interface, a contract, to honor.
-- Extendability: new functionalities will be also easier to create. It is much easier to add new pieces to a lego construction than to a mess of spaghetti.
+- **Understanding the code**: it is easier to understand little pieces that have well defined responsibilities than a huge blocks of code. It is easier to understand how a lego construction works than a plate of spaghetti. New programers, or even programmers already familiar with the code, will have a better time, a lower cognitive load, and will need less time understanding what the program is doing and how is doing it.
+- **Bug fixing**: it is much easier to locate which part of the code is responsible for a particular bug, like the calculus of the circle area if the functionality of the program is divided into small pieces. If an error occurs in a program organized with functions, a developer can locate and correct the error more quickly than in a poorly organized code.
+- **Testing**: it is possible to check if a block of code is honoring its interface, because it now has an interface, a contract, to honor.
+- **Extendability**: new functionalities will be also easier to create. It is much easier to add new pieces to a lego construction than to a mess of spaghetti.
 
 ### Code reuse
 
@@ -264,13 +264,13 @@ This change might seem small, but it has several advantages:
 
 ## Scope
 
-To understand what do we mean when we say that we *pass* some data to a function we need to understand the concept of the scope.
+To understand what do we mean when we say that we *pass* some data to a function we need to understand the concept of the [scope](https://en.wikipedia.org/wiki/Scope_(computer_science)).
 
-When we are programming we store and access data in memory.
-As we have seen, we refer to the data stored in memory by using variables.
-We could think that those variables, once they are created, are available in every part of our program.
-If you would used that approach when you tried to build a program with more than a few lines of code, it would become very difficult to track which part of the program had changed a variable.
-So maintining those large programs would be very difficult.
+When we are programming we store and access **data in memory**.
+As we have seen, we **access** data stored in memory by using **variables**.
+We could think that, idealy, those variables, once they created, should be **globally available** in every part of our program.
+If you would used that approach when you tried to build a program with more than a few lines of code, it would become very difficult to track **which part** of the program had **changed a variable**.
+So **maintining** those large programs would be very **difficult**.
 
 Functions do not only structure the code in logical blocks, but they also limit the data that every one of those blocks can access.
 Functions can use:
@@ -278,12 +278,12 @@ Functions can use:
 - the variables that are defined inside them.
 - the arguments that we pass to them.
 
-We say that functions define a [scope](https://en.wikipedia.org/wiki/Scope_(computer_science)), an area of the program in which certain variables can be accessed.
+We say that functions define a **scope, an area of the program in which certain variables can be accessed**.
 In a computer program not all data is available to every part of the code.
 The scope defines where in the code a variable is available, and functions define their own scope.
 The code inside a function has its own variables, and those are not shared between functions or between the function and the rest of the code.
 
-For instance, the variables that are defined inside a function are not available outside of the function.
+For instance, variables that are defined inside a function are **not available outside** the function.
 
 ```{pyodide}
 def print_numbers():
@@ -313,7 +313,7 @@ We get a "'name' is not defined error" because the variable name was created ins
 A variable can only be used when is in the current scope.
 It is said that the function has a local scope in which its variables are available.
 
-To use a value inside a function, usually, we pass the variable to the function.
+**To use a value** inside a function, usually, **we pass the variable** to the function.
 
 Schema with the scope of a function call:
 
@@ -355,8 +355,8 @@ flowchart LR
     call1 ---> arguments
 ```
 
-A variable points to some data stored in memory. Strictly speaking the variable belongs to a scope, the data pointed by the variable does not.
-For instance, if we store an object in memory, like the value 2, that object does not belong to a scope, the variables that might point to it do.
+A variable points to some data stored in memory. Strictly speaking **the variable belongs to a scope, the data pointed by the variable does not**.
+For instance, if we store an object in memory, like the value 2, that object does not belong to a scope, the variables that point to it do.
 
 ```{pyodide}
 
@@ -381,13 +381,13 @@ print(GLOBAL_GREETING)
 ```
 
 In this case the variable name has been created in the global scope, it is a global variable available everywhere.
-In general, avoid creating global variables, specially if they are not immutable constants.
+In general, **avoid creating global variables**, specially if they are not immutable constants.
 As a general rule, the use of the global scope is discouraged, try not to use it.
 If you think you need a global variable, think twice, in most cases is better not to use them.
 
 Here's a tip for the future you, to keep states it might be much better to use objects, instances of a class, than global variables.
 
-Just remember, try very hard not to use global varibles, although you can allow some exceptions with some immutable ones used for global configurations. (By the way, if you follow the [PEP8](https://peps.python.org/pep-0008/) style guide, as you should, contants defined in the global scope are written with all capital letters.)
+Just remember, try very hard not to use global varibles, although you can allow some exceptions with **some immutable** ones used for global configurations. (By the way, if you follow the [PEP8](https://peps.python.org/pep-0008/) style guide, as you should, contants defined in the global scope are written with all capital letters.)
 It is common to use this kind of global variables, immutables and related to configuration, and, by convention, in Python, people name them using all-caps variable names.
 
 ```{pyodide}
@@ -455,7 +455,7 @@ some_function_using_threads()
 print(f"We have changed the global number of threads, now they are: {CONFIG['num_threads']}")
 ```
 
-In general, try not to abuse of the global scope. Functions were desing to modify only its scope and having side effects goes agaist the modularity achived by having functions in the first place.
+In general, try not to abuse of the global scope. Functions were desinged to modify only its scope and having **side effects goes agaist the modularity** achived by having functions in the first place.
 If you abuse of the global scope:
 
 - Proceed at your own risk.
@@ -519,6 +519,12 @@ In this case area belongs to the scope of the calc_rect_area function and result
 Python is a dynamic language, it does not require to defined the types of the arguments and return values, and, by default, does not enforce those types even when they are defined.
 The type annotations are meant as a way of documenting the code.
 
+```
+def calc_rect_area(width:float, height:float) -> float:
+    area = width * height
+    return area
+```
+
 There are [typing tools](https://typing.readthedocs.io/), like [mypy](https://mypy-lang.org/) that can be used to enforce the use of the types, but they are not part of the language proper.
 
 ## The function interface
@@ -526,14 +532,14 @@ There are [typing tools](https://typing.readthedocs.io/), like [mypy](https://my
 Now that we have talked about how to define functions, and how to pass and get data from them, we can deliniate what the function interface is.
 Remember, when thinking about a function, or any other form of modularizing the code, of dividing it in pieces, take into accounts two aspects:
 
-- the interface: how the function interacts with the rest of the program
-- the implementation: how the task is carried out
+- the **interface**: how the function interacts with the rest of the program
+- the **implementation**: how the task is carried out
 
-For the structure of the program interfaces are more important than implementations, because if you change an implementation, for instance to speed it up or to fix a bug, the rest of the program will be unafected as long as you keep the interface.
-Think of the interface as a promise done to the rest of the program, as a contract that the function will honor. Thus, for the rest of the program, the implementation is just a detail, what matters is how to interact with that piece of the code.
-The program is a complex machine build with small, and hopefully understandable, pieces, and the interface is the shape of each piece.
+For the structure of the program interfaces are more important than implementations, because **if you change an implementation**, for instance to speed it up or to fix a bug, **the rest of the program will be unafected** as long as you keep the interface.
+Think of the interface as a promise done to the rest of the program, as a contract that the function will honor. Thus, for the rest of the program, the implementation is just **a detail**, what matters is how to interact with that piece of the code.
+The program is a complex machine build with small, and hopefully understandable, pieces, and **the interface is the shape** of each **piece**.
 
-We could split the interface in two: the explicit or interface proper, and the implicit interface. We could also call to these two parts: interface and side effects.
+We could split the interface in two: the **explicit** or interface proper, and the **implicit** interface. We could also call to these two parts: **interface and side effects**.
 
 The interface proper is comprised by:
 
@@ -541,20 +547,20 @@ The interface proper is comprised by:
 - the arguments accepted by the function as well as its types
 - the returned values and its types
 
-A more suttle part of the interface, the implicit interface, or the [side effects](https://en.wikipedia.org/wiki/Side_effect_(computer_science)), an effect other than reading the value of the function arguments and returning the intended result. Side effects are interactions of the function with the rest of the program that are not explicitly declared like:
+A more suttle part of the interface, the implicit interface, or the [side effects](https://en.wikipedia.org/wiki/Side_effect_(computer_science)), **an effect other than reading the value of the function arguments and returning** the intended result. Side effects are interactions of the function with the rest of the program that are not explicitly declared like:
 
-- any modification of the state of the objects passed to the function that are not clearly stated in the interface and, thus, not expected by the user.
-- any modification to the mutable objects passed to the function not clearly estated
-- any modification of the global state, like changing the value of a global variable
+- any **modification** of the **state of the objects** passed to the function that are not clearly stated in the interface and, thus, not expected by the user.
+- any modification to the **mutable objects** passed to the function not clearly estated
+- any modification of the **global state**, like changing the value of a global variable
 - any use of the global scope, like the reading of a global variable
 
-The interface proper is the stated contract that the function explicitely declares to follow and its at the base of the software modularity. Side effects are a modularity violation and a throw back to the spaghetti code, to an unmaintainable mess. (Although, in some cases these side effects can be useful, or even completely necesary).
+The interface proper is the stated contract that the function explicitely declares to follow and its at the base of the software modularity. Side effects are a modularity violation and a throw back to the **spaghetti code**, to an unmaintainable mess. (Although, in some cases these side effects can be useful, or even completely necesary).
 
 ### Name and namespace
 
 The function name is a critical part of the function interface, if we would change it, the rest of the code that uses that function would have to be changed.
 
-The namespace, where the function can be found, is also important.
+The namespace, **where the function can be found**, is also important.
 For instance, in Python the [sqrt](https://docs.python.org/3/library/math.html#math.sqrt) function is located in the [math](https://docs.python.org/3/library/math.html) module of the standard library, so to use it we have to import it from there.
 
 ```{pyodide}
@@ -563,7 +569,7 @@ from math import sqrt
 print(sqrt(2))
 ```
 
-If the Python developers were to change the location of the sqrt function, we would have to change our code accordingly. By the way, in the Python standard library there is a different [sqrt](https://docs.python.org/3/library/cmath.html#cmath.sqrt) function with a different interface, a function that return [complex](https://docs.python.org/3/library/functions.html#complex) numbers instead of [floats](https://docs.python.org/3/library/functions.html#float), and we differenciate between these two functions because they are imported from different namespaces, from different modules.
+If Python developers were to change the location of the sqrt function, we would have to change our code accordingly. By the way, in the Python standard library there is a different [sqrt](https://docs.python.org/3/library/cmath.html#cmath.sqrt) function with a different interface, a function that return [complex](https://docs.python.org/3/library/functions.html#complex) numbers instead of [floats](https://docs.python.org/3/library/functions.html#float), and we differenciate between these two functions because they are imported from different namespaces, from different modules.
 
 ```{pyodide}
 from math import sqrt as float_sqrt
@@ -581,7 +587,7 @@ The arguments accepted by the function, as well as its types, are also part of t
 
 Returned values and types are also part of the interface, if we change what we return we will have to alter the calls to the function.
 
-By the way, I think that it is not a very good practice to change the number or type of the values returned depending on the function call.
+By the way, I think that it is **not** a very good practice to **change the number or type of the values returned depending on the function call**.
 Imagine that we did a function that returned either a float or a complex number depending on the input.
 
 ```{pyodide}
@@ -640,11 +646,12 @@ else:
 
 In this case it'd be better to just let the error be raised, like the standard library sqrt function does.
 In that way the caller we'll be aware that a problem happened, and will have to deal the the error only when it needs to, and not in every call in the [call stack](https://en.wikipedia.org/wiki/Call_stack).
+Remember the [Zen](https://peps.python.org/pep-0020/): explicit is better than implicit.
 
 ### Object state change
 
 A function could change the state of an object passed as an argument.
-For instance, imagine that you are reading from a file and that you pass the file object to a function, that function could change the state of the file object, for instance by consuming from the file or by closing it.
+For instance, imagine that you are reading from a file and that you pass the file object to a function, that function could change the state of the file object, for instance by **consuming** from **the file** or by closing it.
 
 ```{pyodide}
 from io import StringIO
@@ -678,7 +685,7 @@ bad_actor_closes_file(file)
 print(len(list(file)))
 ```
 
-After calling to the different functions the behaviour of the program will be quite different, so the change in the state of the file object is a side effect, a implicit part of the function interface.
+After calling to the different functions the behaviour of the program will be quite different, so the change in the state of the file object is a **side effect**, a implicit part of the function interface.
 It is always a good policy to informe to the caller/user of the function about these changes of state by making them explici
 t.
 ### Gobal variables
@@ -691,22 +698,22 @@ In Python the global scope is frequently used to store configuration constants.
 Altering global variables makes the progam less modular because although the change of these variable could be considered part of the interface of the function, it is not an explicit part, it is not declared as an argument or as a return. So, by modifying global variables we get code that is more spaghetti like, and that so the program will be less maintainable.
 
 
-If you think that you need to alter the global state, think twice, because, in general, this is a very bad idea. If after thinking it carefully you still think you need to do it, think it again.
+If you think that you need to **alter the global state**, think twice, because, in general, this is a **very bad idea**. If after thinking it carefully you still think you need to do it, think it again.
 There is another mechanism to store states between funcion calls that respects the modularity: classes and objects. Objects are modular and they allow us to store states between calls. That is one of the big difference between the procedural and the object oriented approach.
 
 ### Value change of mutable objects
 
-In general, we could pass data to a function if two different ways by:
+In general, we could pass data to a function in two different ways by:
 
-- copying it
-- using a reference or a pointer
+- **copy**ing it
+- using a **reference** or a pointer
 
 In the first case we copy the value. Imagine that we were passing a variable that holds the integer 2. We would pass that data to the function by creating a copy of that number in a different part of the memory and, thus, the variable inside the function would reference to a different 2 than the variable outside the function.
 
 In the second case both variables, the one inside the function and the ones outside, would end up referencing the same value, the same 2.
 In some languages, like C or Rust one can chose how to proceed, do we want to copy the data or to create a reference or a pointer to it, and that is made explicit in the function interface.
 
-One of the Python objectives was to be simple, and that is why, maybe, his creator chose to avoid this complexty and to make all arguments passings to any function by reference. Moreover, in Python all variables are always references.
+One of the Python objectives was to be simple, and that is why, maybe, his creator chose to avoid this complexty and to make all arguments passings to any function by reference. Moreover, **in Python all variables are always references**.
 
 ```{pyodide}
 def say_hello(name):
@@ -781,8 +788,8 @@ flowchart TB
     classDef memory fill:#ccc
 ```
 
-For immutable types having several references to the same object is not a problem at all because even if different variables hold references to the same object, none of them could change its value, but with mutable data types we have a problem. For instance, a function could change a list, that has been passed to it by a caller, by appending values to it without the caller awarenes.
-So, in Python mutable objects could be altered inside any function and that is part of the interface, but an implicit part.
+For **immutable** types having **several references** to the same object is **not a problem** at all because even if different variables hold references to the same object, none of them could change its value, but with mutable data types we have a problem. For instance, a function could change a list, that has been passed to it by a caller, by appending values to it without the caller awarenes.
+So, in Python **mutable objects could be altered inside any function** and that is part of the interface, but an implicit part.
 
 Try to guess what will be the result of running the following code:
 
@@ -975,7 +982,7 @@ This is an aspect that varies from language to language.
 If you study a different programming language you will need to understand if the variables are ment to be values, [pointers](https://en.wikipedia.org/wiki/Pointer_(computer_programming)) or references.
 In Python they are always references. You can read a Real Python tutorial about how Python pass [by reference](https://realpython.com/python-pass-by-reference/).
 
-Changing inside the function a mutable object that have been passed to it without warning the function user is a common source of bugs and problems. This is not a good practice, try to avoid it!
+**Changing** inside the function a **mutable object** that have been passed to it without warning the function user is a **common source of bugs** and problems. This is not a good practice, try to avoid it!
 The previous code could be written to avoid this problem.
 
 ```{pyodide}
