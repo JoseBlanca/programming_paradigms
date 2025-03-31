@@ -299,3 +299,7 @@ Parse the fastq file creating a generator, otherwise you would fill out your com
 You can use a [Counter](https://docs.python.org/3/library/collections.html#collections.Counter) object to count the kmers.
 
 Remember the hints given in the calculate fastq statistics regarding opening gzipped and not compressed fastq files.
+
+### Solution
+
+If you want, you could take a peak of a possible [solution](files/count_kmers.py).
