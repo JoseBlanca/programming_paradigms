@@ -8,14 +8,14 @@ format:
 
 Another way in which we can approach the structure of a program is [Functional Programming](https://en.wikipedia.org/wiki/Functional_programming).
 
-One could be tempted to think that Functional Programming is the paradimg that uses functions, but that would be a mistake. As we have already seen, functions are the key concept in the Procedural approach and functions, althought they are called methods, are a key component of the classes used in the Object Oriented approach. It is called Functional Programming, because in this approach functions are used in new ways, they can, for instance, be arguments passed to other functions.
-In functional programming we avoid changing state. In practical terms, this means functions can be passed around like data, and we minimize the use of variables that get updated.
+One could be tempted to think that Functional Programming is the paradimg that uses functions, but that would be a mistake. As we have already seen, functions are the key concept in the Procedural approach and functions, although they are called methods, are a key component of the classes used in the Object Oriented approach. It is called Functional Programming, because in this approach functions are used in new ways, they can, for instance, be arguments passed to other functions.
+In functional programming we avoid changing state. In practical terms, this means **functions can be passed around like data**, and we minimize the use of variables that get updated.
 
 Functional Programming is normaly explanied in very theoretical terms.
 This kind of theoretical explanation might have its uses, but you won't find it here.
 In my day to day work I use functional programming concepts all the time, but always motivated by a practical need.
-This functional approach is especially useful when dealing with big data sets, and that it why I use it.
-For instance, in bioinformatics, you might have to process millions of sequence reads. Using iterators and generators (a functional style) means you don’t need to load all data at once – you can process one record at a time, which is memory-efficient.
+This functional approach is especially useful when dealing with **big data sets**, and that is why I use it.
+For instance, in bioinformatics, you might have to process millions of sequence reads. Using [iterators](https://docs.python.org/3/glossary.html#term-iterator) and [generators](https://docs.python.org/3/glossary.html#term-generator) (a functional style) means you don’t need to load all data at once – you can process one record at a time, which is **memory-efficient**.
 
 Let's do an example.
 Imagine that we want to sum all the numbers from 1 to 9.
@@ -43,13 +43,13 @@ print(sum(numbers))
 
 ### Iterators and iterables
 
-To sum some numbers, for instance the first 1000 integers, we don't need to create a list to hold them, we only need to get those numbers one after the other, one at a time.
+To sum some numbers, for instance the first 1000 integers, we don't need to create a list to hold them in memory, we **only** need to get those numbers one after the other, **one at a time**.
 In Python that's the difference between a [sequence](https://docs.python.org/3/glossary.html#term-sequence) and an [iterator](https://docs.python.org/3/glossary.html#term-iterator).
 
 Lists or strings are examples of sequences, they are objects that:
 
-- allow for random access, we can access every item by its position in the sequence
-- have a length, they can return the number of items that they contain
+- allow **random access**, we can access every item by its position in the sequence
+- have a **length**, they can return the number of items that they contain
 
 We could use those properties to get a list of numbers summed.
 
@@ -63,7 +63,7 @@ for i in range(len(numbers)):
 print(accumulated_sum)
 ```
 
-But, we could accomplish the same goal, with much less. We don't need the items to be ordered, or to know the total number of items or, even, to have all the numbers in memory at the same time; we just need access to each element, one at a time, that's all.
+But, we could accomplish the same goal, with much less. We don't need the items to be ordered, or to know the total number of items or, even, to have all the numbers in memory at the same time; **we just need** to access **one element at a time**, that's all.
 
 ```{pyodide}
 accumulated_sum = 0
@@ -73,12 +73,12 @@ for number in range(1, 10):
 print(accumulated_sum)
 ```
 
-This time we have used [range](https://docs.python.org/3/library/functions.html#func-range). range objects don't hold the number in memory, they create them one at a time, when the iteration, the for loop, demmands it.
-In this way, we have managed to add those numbers using much less memory.
+This time we have used [range](https://docs.python.org/3/library/functions.html#func-range). range objects don't hold the numbers in memory, they create them one at a time, when the iteration, the for loop, demmands it.
+In this way, we have managed to add those numbers using **much less memory**.
 What we have done is to approach the problem using the iterator interface.
-An iterator is an object that:
+An [iterator](https://docs.python.org/3/glossary.html#term-iterator) is an object that:
 
-- represents a stream of data, it yields its items one at a time.
+- represents **a stream of data**, it yields its items one at a time.
 - it raises a [StopIteration](https://docs.python.org/3/library/exceptions.html#StopIteration) exception when there are no more items to yield.
 
 Let's sum the first ten numbers in a way that reflects the iterator protocol.
@@ -97,7 +97,7 @@ while True:
 print(accumulated_sum)
 ```
 
-We get each number, one at at time, by calling next on the iterator until the iterator raises a StopIteration, and then we break the loop, we are done.
+We get each number, one at at time, by calling [next](https://docs.python.org/3/library/functions.html#next) on the iterator until the iterator raises a StopIteration, and then we break the loop, we are done.
 That is in fact how the for loop works internally, it keeps calling next on the given object until it gets a StopIteration.
 
 Well, in fact, the for loop can make use of iterators, but also of other kind of objects.
@@ -125,13 +125,14 @@ print(next(numbers_iterator))
 print(next(numbers_iterator))
 next(numbers_iterator)
 ```
+
 This is, more or less, what for does for us and, in that way, it can deal with both iterables and iterators.
 
 Python is fond of iterables and iterators, and has many functions that use them.
-Many common Python objects, although you might think that are sequences, are, in fact, iterators: objects returned by the dict keys, values and items, range or opened text files.
-And it also has the itertools module and the map, filter and reduce functions.
+Many common Python objects, although you might think that are sequences, are, in fact, iterators, like: objects returned by the dict keys, values and items, range or opened text files.
+And it also has the [itertools](https://docs.python.org/3/library/itertools.html) module and the [map](https://docs.python.org/3/library/functions.html#map), [filter](https://docs.python.org/3/library/functions.html#filter) and [reduce](https://docs.python.org/3/library/functools.html#functools.reduce) functions.
 
-To sum the first numbers, we could even skip the for loop entirely to sum the numbers.
+To sum the first numbers, we could even skip the for loop entirely.
 
 ```{pyodide}
 print(sum(range(10)))
@@ -155,14 +156,16 @@ print(accumulated_sum)
 
 ### Lazy and eager
 
-[range](https://docs.python.org/3/library/functions.html#func-range) creates the numbers in a [lazy](https://en.wikipedia.org/wiki/Lazy_initialization) way, it only creates a number when it is required.
-The opposite approach, the one used by the list, that creates all items ahead of time, is known as **eager**.
+[range](https://docs.python.org/3/library/functions.html#func-range) creates the numbers in a [lazy](https://en.wikipedia.org/wiki/Lazy_initialization) way, it only **creates** a number **when it is required**.
+The opposite approach, the one used by the list, that **creates all items ahead of time**, is known as **eager**.
+
 Lazy approaches delay [creation](https://en.wikipedia.org/wiki/Lazy_initialization) or [computation](https://en.wikipedia.org/wiki/Lazy_evaluation) as much as possible, while eager approaches create or compute as soon as they are instantiated or called.
 
 ### Generators
 
-[Generators](https://docs.python.org/3/glossary.html#term-generator) are a very convinient Python mechanism that allow us to create our own iterators.
-Generators look decively similar to a standard function, with the only difference that they use the [yield](https://docs.python.org/3/reference/simple_stmts.html#yield) statement instead of [return](https://docs.python.org/3/reference/simple_stmts.html#return).
+[Generators](https://docs.python.org/3/glossary.html#term-generator) are a very convinient Python mechanism that allow us to create **our own iterators**.
+
+Generators look decively similar to a standard Python function, with the only difference that they use the [yield](https://docs.python.org/3/reference/simple_stmts.html#yield) statement instead of [return](https://docs.python.org/3/reference/simple_stmts.html#return).
 However, generators behave quite differently than standard functions.
 
 ```{pyodide}
@@ -182,7 +185,7 @@ print(numbers_funct())
 While the function only returns one item and stops, the generator is capable of yielding one item after another until it runs out of items.
 The call to the generator does not return any item at all, but a [generator iterator](https://docs.python.org/3/glossary.html#term-generator-iterator) object that, as any other iterator, will be able to yield items every time we ask for them using next.
 
-While each function call is independent, the function restarts its execution every time it is called from the very begining, generator iterators resume its execution every time we ask them to yield a new item.
+While each function call is independent, the function restarts its execution every time it is called from the very begining, **generator** iterators **resume its execution** every time we ask them to yield a new item.
 
 ```{pyodide}
 def greeting_generator():
@@ -201,7 +204,7 @@ print(next(greetings))
 ```
 
 Generators are a very convenient way of creating our own iterators.
-For instance, we could create a generator that yields the first n number (a very similar functionality that the one provided by the built-in range).
+For instance, we could create a generator that yielded the first n number (a very similar functionality that the one provided by the built-in range).
 
 
 ```{pyodide}
@@ -251,7 +254,8 @@ print(list(numbers))
 print(list(numbers))
 ```
 
-Think of iterators a stream of items that is seen only once.
+Think of **iterators** a **stream of items that is seen only once**.
+
 You should take into account this behaviour when creating algorithms that work with iterators.
 Although once you get used to them that won't be a problem for many algorithms, it can be challenging at the begining to think on how to approach certain problems using iterators.
 
@@ -266,10 +270,10 @@ If you plant to use iterators at all you should take a look at the [itertools](h
 A [pure function](https://en.wikipedia.org/wiki/Pure_function) is a function that:
 
 - given the same arguments it will return the same values
-- does not have any side effect
+- does not have any side effects
 
-Pure functions have some advantages over functions that, for instance, have side effects, that change an external state.
-As we discussed in the procedural approach, side effects destroy modularity and make code more difficult to reason about and maintain.
+Pure functions have some advantages over functions that, for instance, have side effects, that change a external states.
+As we discussed in the procedural approach, **side effects destroy modularity** and make code more difficult to reason about and maintain.
 
 ### immutable objects
 
@@ -282,7 +286,7 @@ It is nice to have functions that do not change the objects that we lend to them
 
 When using pure functions and immutable objects we can apply very easyly, tricks to improve the performance of our code.
 
-We could, for instance, cache the result of time consuming computations. Since the function given the same arguments always returns the same values and the arguments are not changed, we can return a precomputed instance of the result.
+We could, for instance, **cache** the result of time consuming computations. Since the function given the same arguments always returns the same values and the arguments are not changed, we can **return a precomputed** instance of the **result**.
 
 The [lru_cache](https://docs.python.org/3/library/functools.html#functools.lru_cache) [decorator](https://docs.python.org/3/glossary.html#term-decorator) will cache the result of the function, so if you call the function several times with the same arguments, it will return the cached result and save you some possible expensive computations.
 Caching can, in some cases, improve code performance by a lot.
@@ -302,14 +306,15 @@ print(sum_numbers(1, 1))
 print(sum_numbers(2, 2))
 ```
 
-Of course, lru_cache will not behave propertly with non-pure functions or with mutable arguments.
+Of course, lru_cache will not behave propertly with **non-pure functions or with mutable arguments**.
 
-Pure functions and immutable objects are also very convenient when dealing with large amounts of processing because it is much more easier to paralelize programs built with them.
+Pure functions and immutable objects are also very convenient when dealing with large amounts of processing because it is much more easier to **paralelize** programs built with them.
 
 ## Functions are first class citizens
 
-In Python, like almost anything else, functions are just objects, and they can be used as arguments to other functions or can be returned by other functions. The [functools](https://docs.python.org/3/library/functools.html) has many utilies that take functions as arguments and that, in most cases, return functions.
+In Python, like almost anything else, functions are just objects, and they can be used as **arguments to other functions** or can be **returned by other functions**.
 
+The [functools](https://docs.python.org/3/library/functools.html) has many utilies that take functions as arguments and that, in most cases, return functions.
 For instance, the lru_cache [decorator](https://docs.python.org/3/glossary.html#term-decorator), like any other decorator is in fact a function that takes a function as an argument and returns another function.
 
 ### partial
@@ -351,7 +356,7 @@ print(by_grade)
 
 ## Comprenhensions
 
-All this functional utilities can be combined with several comprenhensions:
+All this functional utilities can be used using several comprenhensions:
 
 - [list comprehension](https://docs.python.org/3/glossary.html#term-list-comprehension)
 - [dict comprehension](https://docs.python.org/3/glossary.html#term-dictionary-comprehension)
@@ -411,7 +416,7 @@ print(odds_squared)
 
 ## filter, map, reduce
 
-Another very useful, and one of the most common, way of using the functional approach is to use [filter](https://docs.python.org/3/library/functions.html#filter), [map](https://docs.python.org/3/library/functions.html#map) and [reduce](https://docs.python.org/3/library/functools.html#functools.reduce).
+Another very useful, and one of the most common, way of using the functional approach is to use [filter](https://docs.python.org/3/library/functions.html#filter), [map](https://docs.python.org/3/library/functions.html#map) and [reduce](https://docs.python.org/3/library/functools.html#functools.reduce) functions.
 All these utilities are designed to work with iterators, with streams of data, and the [map/reduce](https://en.wikipedia.org/wiki/MapReduce) pattern was thought as a tool to process big quantities of data.
 
 
@@ -483,9 +488,9 @@ for i in range(10000):
 print(accmulated_sum)
 ```
 
-The map-reduce approach splits the iteration functionality into the map and reduce functions, we have transformed the for, a loop statement, into a series of functions.
+The map-reduce approach splits the iteration functionality into the map and reduce functions, **we have transformed the for**, a loop statement, **into a series of function calls**.
 
-This approach offers the possibility of doing the computations in parallel because each call to map and reduce is independent, as long as we are using pure functions (no side effects), and the functions do not modify the objects passed to them (something that we could enforce using immutable objects).
+This approach offers the possibility of doing the computations **in parallel** because **each call to map and reduce is independent**, as long as we are using pure functions (no side effects), and the functions do not modify the objects passed to them (something that we could enforce using immutable objects).
 
 Python, for instance, has a multiprocessing [map](https://docs.python.org/3/library/multiprocessing.html#multiprocessing.pool.Pool.map) that allow us to apply map in parallel.
 
@@ -504,34 +509,7 @@ sum_adds_squared = reduce(lambda x, y: x + y, odds_squared)
 If we can transform the computation that we are interested in carrying out into a series of pure functions, we can use this trick to do massive, and time and and memory efficient, computations in parallel.
 This is one of the main practial uses of the functional approach.
 
-## Generators use much less memory
-
-Let's try to add all the squares up to a number using a list comprenhension while calculating the time it takes and the memory it uses. Run the code several times to get a better estimate of the time.
-
-```{pyodide}
-import time, sys
-N = 100000000
-start = time.time()
-nums_list = [i**2 for i in range(N)]
-total1 = sum(nums_list)
-end = time.time()
-print("List comp time:", end-start, "secs; size:", sys.getsizeof(nums_list))
-```
-
-Now, let's solve the same problem using a [generator expression](https://docs.python.org/3/reference/expressions.html#generator-expressions).
-
-```{pyodide}
-import time, sys
-N = 100000000
-start = time.time()
-nums_list = (i**2 for i in range(N))
-total1 = sum(nums_list)
-end = time.time()
-print("List comp time:", end-start, "secs; size:", sys.getsizeof(nums_list))
-```
-
-
-## Filter sequences
+## Example: filter sequences
 
 We have a list of DNA sequences and we want to filter out the ones that have Ns in them.
 We also want to calculate the length of the sequences that remain, the average length and the total length.
@@ -578,7 +556,7 @@ print('Average length: ', sum(lengths) / len(lengths))
 
 The above code does not work as expected. What's the problem with it? Could you fix it?
 
-Now do it without even having to create a list with all the valid sequences in memory, without using a list or a list comprenhension.
+Now do it without even having to create a list with all the valid sequences in memory, without using lists or list comprenhensions.
 
 ```{pyodide}
 def accumulate_len(total_len, num_seqs, seq):
